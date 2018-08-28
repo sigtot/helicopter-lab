@@ -56,15 +56,7 @@ e_reference = 0;
 K_pp = 10;
 K_pd = 10;
 
-s = tf('s');
+%%%%%%%%%%% Travel control
+K_rp = 1;
 
-h = K_1*K_pp/(s^2 + K_1*K_pd*s + K_1*K_pp);
 
-figure(1)
-bode(h)
-
-figure(2)
-pzmap(h)
-
-figure(3)
-step(h)
