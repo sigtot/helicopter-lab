@@ -3,9 +3,9 @@
 % the course TTK4115. Run this file before you execute QuaRC_ -> Build 
 % to build the file heli_q8.mdl.
 
-% Oppdatert høsten 2006 av Jostein Bakkeheim
-% Oppdatert høsten 2008 av Arnfinn Aas Eielsen
-% Oppdatert høsten 2009 av Jonathan Ronen
+% Oppdatert hï¿½sten 2006 av Jostein Bakkeheim
+% Oppdatert hï¿½sten 2008 av Arnfinn Aas Eielsen
+% Oppdatert hï¿½sten 2009 av Jonathan Ronen
 % Updated fall 2010, Dominik Breu
 % Updated fall 2013, Mark Haring
 % Updated spring 2015, Mark Haring
@@ -131,7 +131,6 @@ q5 = 2; %200
 q6 = 0;
 
 Q_4 = diag([q1, q2, q3, q4, q5, q6]);
-
 K_4 = lqr(A_4, B_4, Q_4, R);
 
 start_p = min(real(eig(A_3 - B_3*K))) - 1;
@@ -145,7 +144,6 @@ j = sqrt(-1);
 theta = pi/50;
 
 for i = 1:2:length(p)
-   
     real_part = -cos(theta)*start_p;
     
     p(i) = real_part + j*sin(theta)*start_p;
@@ -158,7 +156,14 @@ end
 L_4 = place(A_4', C_4', p)';
 
 
+% Problem 3
+C_5 = [ 0, 0, 1, 0, 0;
+        0, 0, 0, 0, 1; ]; % Observable
+C_6 = [ 1, 0, 0, 0, 0;
+        0, 0, 1, 0, 0; ]; % Unobservable
+    
 
+    
 
 
 
