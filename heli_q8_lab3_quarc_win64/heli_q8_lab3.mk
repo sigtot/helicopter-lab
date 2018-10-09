@@ -129,7 +129,7 @@ RELATIVE_PATH_TO_ANCHOR   = ..
 MODELREF_TARGET_TYPE      = NONE
 
 #-- Support for parallel builds
-START_DIR         = C:\Users\viktorko\DOCUME~1\linsys\GRUPPE~1
+START_DIR         = C:\Users\viktorko\Desktop\09_10_18\helicopter-lab
 MASTER_ANCHOR_DIR = 
 
 #-- Support multi-instance code

@@ -3,9 +3,9 @@
  *
  * Code generation for model "heli_q8_lab3".
  *
- * Model version              : 1.62
+ * Model version              : 1.64
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Tue Sep 25 12:53:32 2018
+ * C source code generated on : Tue Oct 09 15:23:39 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -60,7 +60,7 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&heli_q8_lab3_B.PitchCounttorad), 0, 0, 31 }
+  { (char_T *)(&heli_q8_lab3_B.ElevationCounttorad), 0, 0, 45 }
   ,
 
   { (char_T *)(&heli_q8_lab3_DW.HILInitialize_AIMinimums[0]), 0, 0, 68 },
@@ -71,9 +71,9 @@ static DataTypeTransition rtBTransitions[] = {
 
   { (char_T *)(&heli_q8_lab3_DW.HILReadEncoderTimebase_Task), 16, 0, 1 },
 
-  { (char_T *)(&heli_q8_lab3_DW.ElevationScopedegs_PWORK.LoggedData), 11, 0, 9 },
+  { (char_T *)(&heli_q8_lab3_DW.ToWorkspace_PWORK.LoggedData), 11, 0, 11 },
 
-  { (char_T *)(&heli_q8_lab3_DW.HILInitialize_ClockModes[0]), 6, 0, 46 },
+  { (char_T *)(&heli_q8_lab3_DW.HILInitialize_ClockModes[0]), 6, 0, 47 },
 
   { (char_T *)(&heli_q8_lab3_DW.HILInitialize_POSortedChans[0]), 7, 0, 8 }
 };
@@ -86,7 +86,7 @@ static DataTypeTransitionTable rtBTransTable = {
 
 /* data type transitions for Parameters structure */
 static DataTypeTransition rtPTransitions[] = {
-  { (char_T *)(&heli_q8_lab3_P.A_4[0]), 0, 0, 118 },
+  { (char_T *)(&heli_q8_lab3_P.A_observer[0]), 0, 0, 118 },
 
   { (char_T *)(&heli_q8_lab3_P.HILReadEncoderTimebase_clock), 6, 0, 10 },
 
@@ -94,7 +94,7 @@ static DataTypeTransition rtPTransitions[] = {
 
   { (char_T *)(&heli_q8_lab3_P.HILInitialize_active), 8, 0, 35 },
 
-  { (char_T *)(&heli_q8_lab3_P.PitchCounttorad_Gain), 0, 0, 42 },
+  { (char_T *)(&heli_q8_lab3_P.ElevationCounttorad_Gain), 0, 0, 47 },
 
   { (char_T *)(&heli_q8_lab3_P.GameController_BufferSize), 5, 0, 1 },
 
