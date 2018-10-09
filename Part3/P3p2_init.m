@@ -17,7 +17,7 @@ r2 = 20; %20
 
 R = diag([r1, r2]);
 
-K = lqr(A_3, B_3, Q_3, R);
+
 K_hat = K(1:2, 1:3);
 
 Control = [A, A * B, A.^2 * B];

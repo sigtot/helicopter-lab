@@ -1,6 +1,6 @@
 % FOR HELICOPTER NR 3-10
 % This file contains the initialization for the helicopter assignment in
-% the course TTK4115. Run this file before you execute QuaRC_ -> Build 
+% the course TTK4115. Run this file before you execute QuaRC_ -> Build
 % to build the file heli_q8.mdl.
 
 % Oppdatert h�sten 2006 av Jostein Bakkeheim
@@ -10,101 +10,32 @@
 % Updated fall 2013, Mark Haring
 % Updated spring 2015, Mark Haring
 
-
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
-Joystick_gain_y = -1;
-
+Joystick_gain_x = 2;
+Joystick_gain_y = -2;
 
 %%%%%%%%%%% Physical constants
-g = 9.81; % gravitational constant [m/s^2]
-l_c = 0.46; % distance elevation axis to counterweight [m]
-l_h = 0.66; % distance elevation axis to helicopter head [m]
-l_p = 0.175; % distance pitch axis to motor [m]
-m_c = 1.92; % Counterweight mass [kg]
-m_p = 0.72; % Motor mass [kg]
-Vs_astrix = 7.5;
+g = 9.81;                                                   % gravitational constant [m/s^2]
+l_c = 0.46;                                                 % distance elevation axis to counterweight [m]
+l_h = 0.66;                                                 % distance elevation axis to helicopter head [m]
+l_p = 0.175;                                                % distance pitch axis to motor [m]
+m_c = 1.92;                                                 % Counterweight mass [kg]
+m_p = 0.72;                                                 % Motor mass [kg]
+Vs_astrix = 7.5;                                            % Voltage to keep the elevation at zero
 
-K_f = -g*(m_c*l_c - 2*m_p*l_h)/(l_h*Vs_astrix);
+K_f = -g * (m_c * l_c - 2 * m_p * l_h) / (l_h * Vs_astrix); % Motor force constant
 
-L_1 = l_p*K_f;
-L_2 = g*(m_c*l_c - 2*m_p*l_h);
-L_3 = l_h*K_f;
-L_4 = -l_h*K_f;
+L_1 = l_p * K_f;                                            % Constant used in the nonlinear equations of motion
+L_2 = g * (m_c * l_c - 2 * m_p * l_h);                      % Constant used in the nonlinear equations of motion
+L_3 = l_h * K_f;                                            % Constant used in the nonlinear equations of motion
+L_4 = -l_h * K_f;                                           % Constant used in the nonlinear equations of motion
 
-J_p = 2*m_p*l_p^2;
-J_e = m_c*l_c^2 + 2*m_p*l_h^2;
-J_lam = m_c*l_c^2 + 2*m_p*(l_h^2 + l_p^2);
+J_p = 2 * m_p * l_p^2;                                      % Moment of inertia about the pitch axis
+J_e = m_c * l_c^2 + 2 * m_p * l_h^2;                        % Moment of inertia about the elevation axis
+J_lam = m_c * l_c^2 + 2 * m_p * (l_h^2 + l_p^2);            % Moment of inertia about the travel axis
 
-K_1 = L_1/J_p;
-K_2 = L_3/J_e;
-K_3 = L_2/J_lam;
+K_1 = L_1 / J_p;                                            % Constant used in the linearised equations of motion
+K_2 = L_3 / J_e;                                            % Constant used in the linearised equations of motion
+K_3 = L_2 / J_lam;                                          % Constant used in the linearised equations of motion
 
-Joystick_gain_x = 2;
-Joystick_gain_y = 2;
-
-
-%% Part 4
-
-A_4 = [0,   1, 0, 0, 0, 0;...
-       0,   0, 0, 0, 0, 0;...
-       0,   0, 0, 1, 0, 0;...
-       0,   0, 0, 0, 0, 0;...
-       0,   0, 0, 0, 0, 1;...
-       K_3, 0, 0, 0, 0, 0
-];
-
-B_4 = [
-    0,   0;...
-    0,   K_1;...
-    0,   0;...
-    K_2, 0;...
-    0,   0;...
-    0,   0
-];
-
-C_4 = [1, 0,  0,  0,  0,  0;...
-     0, 0,  1,  0,  0,  0;...
-     0, 0,  0,  0,  1,  0
- ];
-
-
-q1 = 150; %4
-q2 = 10; %4
-q3 = 150; %14
-q4 = 10; %20
-q5 = 2; %200
-q6 = 0;
-
-Q_4 = diag([q1, q2, q3, q4, q5, q6]);
-K_4 = lqr(A_4, B_4, Q_4, R);
-
-start_p = min(real(eig(A_3 - B_3*K))) - 1;
-
-[rows_A, ~] = size(A_3);
-
-p = zeros(rows_A, 1);
-
-j = sqrt(-1);
-
-theta = pi/50;
-
-for i = 1:2:length(p)
-    real_part = -cos(theta)*start_p;
-    
-    p(i) = real_part + j*sin(theta)*start_p;
-    p(i+1) = real_part - j*sin(theta)*start_p;
-    
-    theta = theta + pi/30;
-
-end
-
-L_4 = place(A_4', C_4', p)';
-
-
-% Problem 3
-C_5 = [ 0, 0, 1, 0, 0;
-        0, 0, 0, 0, 1; ]; % Observable
-C_6 = [ 1, 0, 0, 0, 0;
-        0, 0, 1, 0, 0; ]; % Unobservable
