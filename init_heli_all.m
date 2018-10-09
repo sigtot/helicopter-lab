@@ -44,22 +44,6 @@ K_3 = L_2/J_lam;
 Joystick_gain_x = 2;
 Joystick_gain_y = 2;
 
-elevation_offset = -31.5;
-
-
-
-K_f = -g*(m_c*l_c - 2*m_p*l_h)/(l_h*Vs_astrix);
-
-%%%%%%%%%%% Elevation control
-e_reference = 0;
-
-%%%%%%%%%%% Pitch control
-K_pp = 10;
-K_pd = 10;
-
-%%%%%%%%%%% Travel control
-K_rp = 1;
-
 %% Part 3
 
 A = [0,1,0; 0,0,0; 0,0,0];
