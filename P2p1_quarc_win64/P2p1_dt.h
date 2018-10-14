@@ -3,9 +3,9 @@
  *
  * Code generation for model "P2p1".
  *
- * Model version              : 1.65
+ * Model version              : 1.68
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Wed Oct 10 00:44:22 2018
+ * C source code generated on : Sun Oct 14 20:04:47 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -60,7 +60,7 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&P2p1_B.PitchCounttorad), 0, 0, 20 }
+  { (char_T *)(&P2p1_B.PitchCounttorad), 0, 0, 21 }
   ,
 
   { (char_T *)(&P2p1_DW.HILInitialize_AIMinimums[0]), 0, 0, 68 },
@@ -71,13 +71,13 @@ static DataTypeTransition rtBTransitions[] = {
 
   { (char_T *)(&P2p1_DW.HILReadEncoderTimebase_Task), 16, 0, 1 },
 
-  { (char_T *)(&P2p1_DW.ToFile_PWORK.FilePtr), 11, 0, 10 },
+  { (char_T *)(&P2p1_DW.ToFile_PWORK.FilePtr), 11, 0, 11 },
 
   { (char_T *)(&P2p1_DW.HILInitialize_ClockModes[0]), 6, 0, 46 },
 
   { (char_T *)(&P2p1_DW.HILInitialize_POSortedChans[0]), 7, 0, 8 },
 
-  { (char_T *)(&P2p1_DW.ToFile_IWORK.Count), 10, 0, 1 }
+  { (char_T *)(&P2p1_DW.ToFile_IWORK.Count), 10, 0, 2 }
 };
 
 /* data type transition table for block I/O structure */
@@ -96,7 +96,7 @@ static DataTypeTransition rtPTransitions[] = {
 
   { (char_T *)(&P2p1_P.HILInitialize_active), 8, 0, 35 },
 
-  { (char_T *)(&P2p1_P.Step_Time), 0, 0, 41 },
+  { (char_T *)(&P2p1_P.PitchCounttorad_Gain), 0, 0, 42 },
 
   { (char_T *)(&P2p1_P.GameController_BufferSize), 5, 0, 1 },
 

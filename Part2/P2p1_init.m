@@ -1,5 +1,3 @@
-elevation_offset = -31.5;
-
 K_f = -g * (m_c * l_c - 2 * m_p * l_h) / (l_h * Vs_astrix);
 
 %%%%%%%%%%% Elevation control

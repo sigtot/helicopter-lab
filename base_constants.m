@@ -1,3 +1,4 @@
+clear; clc;
 % FOR HELICOPTER NR 3-10
 % This file contains the initialization for the helicopter assignment in
 % the course TTK4115. Run this file before you execute QuaRC_ -> Build
@@ -12,9 +13,11 @@
 
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
+Joystick_gain_x = -1;
 Joystick_gain_y = -1;
 
+%%%%%%%%%%% Elevation offset
+elevation_offset = -31.5;
 
 %%%%%%%%%%% Physical constants
 g = 9.81;           % gravitational constant [m/s^2]

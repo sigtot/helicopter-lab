@@ -1,2 +1,2 @@
 %%%%%%%%%%% Travel control
-K_rp = 1;
+Klp = 1.25;

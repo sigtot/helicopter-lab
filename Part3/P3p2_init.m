@@ -2,14 +2,14 @@ A_wo_integral = [0, 1, 0; 0, 0, 0; 0, 0, 0];
 B_wo_integral = [0, 0; 0, K_1; K_2, 0];
 C_wo_integral = [1, 0, 0; 0, 0, 1];
 
-q1 = 150; %4
-q2 = 10; %4
-q3 = 150; %14
+q1 = 10000; %4 - Pitch
+q2 = 1; %4 - Pitch rate
+q3 = 10000; %14 - Elevation rate
 
 Q_wo_integral = diag([q1, q2, q3]);
 
-r1 = 2; %1
-r2 = 20; %20
+r1 = 75; %1 - Vs
+r2 = 100; %20 - Vd
 
 R = diag([r1, r2]);
 
