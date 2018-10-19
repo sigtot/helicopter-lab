@@ -352,8 +352,8 @@
       paramMap.sections(4) = section;
       clear section
       
-      section.nData     = 46;
-      section.data(46)  = dumData; %prealloc
+      section.nData     = 43;
+      section.data(43)  = dumData; %prealloc
       
 	  ;% P2p2_P.PitchCounttorad_Gain
 	  section.data(1).logicalSrcIdx = 74;
@@ -363,71 +363,71 @@
 	  section.data(2).logicalSrcIdx = 75;
 	  section.data(2).dtTransOffset = 1;
 	
-	  ;% P2p2_P.TravelCounttorad_Gain
+	  ;% P2p2_P.Gain1_Gain
 	  section.data(3).logicalSrcIdx = 76;
 	  section.data(3).dtTransOffset = 2;
 	
-	  ;% P2p2_P.TravelTransferFcn_A
+	  ;% P2p2_P.PitchTransferFcn_A
 	  section.data(4).logicalSrcIdx = 77;
 	  section.data(4).dtTransOffset = 3;
 	
-	  ;% P2p2_P.TravelTransferFcn_C
+	  ;% P2p2_P.PitchTransferFcn_C
 	  section.data(5).logicalSrcIdx = 78;
 	  section.data(5).dtTransOffset = 4;
 	
-	  ;% P2p2_P.TravelTransferFcn_D
+	  ;% P2p2_P.PitchTransferFcn_D
 	  section.data(6).logicalSrcIdx = 79;
 	  section.data(6).dtTransOffset = 5;
 	
-	  ;% P2p2_P.Gain_Gain_l
+	  ;% P2p2_P.Gain_Gain_a
 	  section.data(7).logicalSrcIdx = 80;
 	  section.data(7).dtTransOffset = 6;
 	
-	  ;% P2p2_P.RateTransitionx_X0
+	  ;% P2p2_P.Gain1_Gain_d
 	  section.data(8).logicalSrcIdx = 81;
 	  section.data(8).dtTransOffset = 7;
 	
-	  ;% P2p2_P.DeadZonex_Start
+	  ;% P2p2_P.ElevationCounttorad_Gain
 	  section.data(9).logicalSrcIdx = 82;
 	  section.data(9).dtTransOffset = 8;
 	
-	  ;% P2p2_P.DeadZonex_End
+	  ;% P2p2_P.ElevationTransferFcn_A
 	  section.data(10).logicalSrcIdx = 83;
 	  section.data(10).dtTransOffset = 9;
 	
-	  ;% P2p2_P.Gainx_Gain
+	  ;% P2p2_P.ElevationTransferFcn_C
 	  section.data(11).logicalSrcIdx = 84;
 	  section.data(11).dtTransOffset = 10;
 	
-	  ;% P2p2_P.Gain1_Gain
+	  ;% P2p2_P.ElevationTransferFcn_D
 	  section.data(12).logicalSrcIdx = 85;
 	  section.data(12).dtTransOffset = 11;
 	
-	  ;% P2p2_P.PitchTransferFcn_A
+	  ;% P2p2_P.Gain_Gain_n
 	  section.data(13).logicalSrcIdx = 86;
 	  section.data(13).dtTransOffset = 12;
 	
-	  ;% P2p2_P.PitchTransferFcn_C
+	  ;% P2p2_P.Gain1_Gain_m
 	  section.data(14).logicalSrcIdx = 87;
 	  section.data(14).dtTransOffset = 13;
 	
-	  ;% P2p2_P.PitchTransferFcn_D
+	  ;% P2p2_P.TravelCounttorad_Gain
 	  section.data(15).logicalSrcIdx = 88;
 	  section.data(15).dtTransOffset = 14;
 	
-	  ;% P2p2_P.Gain_Gain_a
+	  ;% P2p2_P.TravelTransferFcn_A
 	  section.data(16).logicalSrcIdx = 89;
 	  section.data(16).dtTransOffset = 15;
 	
-	  ;% P2p2_P.Gain1_Gain_d
+	  ;% P2p2_P.TravelTransferFcn_C
 	  section.data(17).logicalSrcIdx = 90;
 	  section.data(17).dtTransOffset = 16;
 	
-	  ;% P2p2_P.ElevationCounttorad_Gain
+	  ;% P2p2_P.TravelTransferFcn_D
 	  section.data(18).logicalSrcIdx = 91;
 	  section.data(18).dtTransOffset = 17;
 	
-	  ;% P2p2_P.Gain_Gain_lv
+	  ;% P2p2_P.Gain_Gain_l
 	  section.data(19).logicalSrcIdx = 92;
 	  section.data(19).dtTransOffset = 18;
 	
@@ -435,27 +435,27 @@
 	  section.data(20).logicalSrcIdx = 93;
 	  section.data(20).dtTransOffset = 19;
 	
-	  ;% P2p2_P.Gain1_Gain_ed
+	  ;% P2p2_P.Gain_Gain_lv
 	  section.data(21).logicalSrcIdx = 94;
 	  section.data(21).dtTransOffset = 20;
 	
-	  ;% P2p2_P.ElevationTransferFcn_A
+	  ;% P2p2_P.Gain1_Gain_e3
 	  section.data(22).logicalSrcIdx = 95;
 	  section.data(22).dtTransOffset = 21;
 	
-	  ;% P2p2_P.ElevationTransferFcn_C
+	  ;% P2p2_P.RateTransitionx_X0
 	  section.data(23).logicalSrcIdx = 96;
 	  section.data(23).dtTransOffset = 22;
 	
-	  ;% P2p2_P.ElevationTransferFcn_D
+	  ;% P2p2_P.DeadZonex_Start
 	  section.data(24).logicalSrcIdx = 97;
 	  section.data(24).dtTransOffset = 23;
 	
-	  ;% P2p2_P.Gain_Gain_n
+	  ;% P2p2_P.DeadZonex_End
 	  section.data(25).logicalSrcIdx = 98;
 	  section.data(25).dtTransOffset = 24;
 	
-	  ;% P2p2_P.Gain1_Gain_n
+	  ;% P2p2_P.Gainx_Gain
 	  section.data(26).logicalSrcIdx = 99;
 	  section.data(26).dtTransOffset = 25;
 	
@@ -527,18 +527,6 @@
 	  section.data(43).logicalSrcIdx = 116;
 	  section.data(43).dtTransOffset = 42;
 	
-	  ;% P2p2_P.Step_Time
-	  section.data(44).logicalSrcIdx = 117;
-	  section.data(44).dtTransOffset = 43;
-	
-	  ;% P2p2_P.Step_Y0
-	  section.data(45).logicalSrcIdx = 118;
-	  section.data(45).dtTransOffset = 44;
-	
-	  ;% P2p2_P.Step_YFinal
-	  section.data(46).logicalSrcIdx = 119;
-	  section.data(46).dtTransOffset = 45;
-	
       nTotData = nTotData + section.nData;
       paramMap.sections(5) = section;
       clear section
@@ -547,7 +535,7 @@
       section.data(1)  = dumData; %prealloc
       
 	  ;% P2p2_P.GameController_BufferSize
-	  section.data(1).logicalSrcIdx = 120;
+	  section.data(1).logicalSrcIdx = 117;
 	  section.data(1).dtTransOffset = 0;
 	
       nTotData = nTotData + section.nData;
@@ -558,7 +546,7 @@
       section.data(1)  = dumData; %prealloc
       
 	  ;% P2p2_P.GameController_ControllerNumber
-	  section.data(1).logicalSrcIdx = 121;
+	  section.data(1).logicalSrcIdx = 118;
 	  section.data(1).dtTransOffset = 0;
 	
       nTotData = nTotData + section.nData;
@@ -569,19 +557,19 @@
       section.data(4)  = dumData; %prealloc
       
 	  ;% P2p2_P.HILReadEncoderTimebase_Active
-	  section.data(1).logicalSrcIdx = 122;
+	  section.data(1).logicalSrcIdx = 119;
 	  section.data(1).dtTransOffset = 0;
 	
 	  ;% P2p2_P.HILWriteAnalog_Active
-	  section.data(2).logicalSrcIdx = 123;
+	  section.data(2).logicalSrcIdx = 120;
 	  section.data(2).dtTransOffset = 1;
 	
 	  ;% P2p2_P.GameController_AutoCenter
-	  section.data(3).logicalSrcIdx = 124;
+	  section.data(3).logicalSrcIdx = 121;
 	  section.data(3).dtTransOffset = 2;
 	
 	  ;% P2p2_P.GameController_Enabled
-	  section.data(4).logicalSrcIdx = 125;
+	  section.data(4).logicalSrcIdx = 122;
 	  section.data(4).dtTransOffset = 3;
 	
       nTotData = nTotData + section.nData;
@@ -629,8 +617,8 @@
     ;%
     ;% Auto data (P2p2_B)
     ;%
-      section.nData     = 22;
-      section.data(22)  = dumData; %prealloc
+      section.nData     = 20;
+      section.data(20)  = dumData; %prealloc
       
 	  ;% P2p2_B.PitchCounttorad
 	  section.data(1).logicalSrcIdx = 0;
@@ -640,85 +628,77 @@
 	  section.data(2).logicalSrcIdx = 1;
 	  section.data(2).dtTransOffset = 1;
 	
-	  ;% P2p2_B.TravelCounttorad
+	  ;% P2p2_B.Gain1
 	  section.data(3).logicalSrcIdx = 2;
 	  section.data(3).dtTransOffset = 2;
 	
-	  ;% P2p2_B.Gain_d
+	  ;% P2p2_B.Gain_b
 	  section.data(4).logicalSrcIdx = 3;
 	  section.data(4).dtTransOffset = 3;
 	
-	  ;% P2p2_B.RateTransitionx
+	  ;% P2p2_B.ElevationCounttorad
 	  section.data(5).logicalSrcIdx = 4;
 	  section.data(5).dtTransOffset = 4;
 	
-	  ;% P2p2_B.Joystick_gain_x
+	  ;% P2p2_B.Gain_d
 	  section.data(6).logicalSrcIdx = 5;
 	  section.data(6).dtTransOffset = 5;
 	
-	  ;% P2p2_B.Gain1
+	  ;% P2p2_B.TravelCounttorad
 	  section.data(7).logicalSrcIdx = 6;
 	  section.data(7).dtTransOffset = 6;
 	
-	  ;% P2p2_B.Gain_b
+	  ;% P2p2_B.Gain_dc
 	  section.data(8).logicalSrcIdx = 7;
 	  section.data(8).dtTransOffset = 7;
 	
-	  ;% P2p2_B.ElevationCounttorad
+	  ;% P2p2_B.Sum
 	  section.data(9).logicalSrcIdx = 8;
 	  section.data(9).dtTransOffset = 8;
 	
-	  ;% P2p2_B.Sum
+	  ;% P2p2_B.RateTransitionx
 	  section.data(10).logicalSrcIdx = 9;
 	  section.data(10).dtTransOffset = 9;
 	
-	  ;% P2p2_B.Gain_dg
+	  ;% P2p2_B.Joystick_gain_x
 	  section.data(11).logicalSrcIdx = 10;
 	  section.data(11).dtTransOffset = 10;
 	
-	  ;% P2p2_B.Sum_o
+	  ;% P2p2_B.RateTransitiony
 	  section.data(12).logicalSrcIdx = 11;
 	  section.data(12).dtTransOffset = 11;
 	
-	  ;% P2p2_B.RateTransitiony
+	  ;% P2p2_B.Joystick_gain_y
 	  section.data(13).logicalSrcIdx = 12;
 	  section.data(13).dtTransOffset = 12;
 	
-	  ;% P2p2_B.Joystick_gain_y
+	  ;% P2p2_B.K_ep
 	  section.data(14).logicalSrcIdx = 13;
 	  section.data(14).dtTransOffset = 13;
 	
-	  ;% P2p2_B.K_ep
+	  ;% P2p2_B.K_ei
 	  section.data(15).logicalSrcIdx = 14;
 	  section.data(15).dtTransOffset = 14;
 	
-	  ;% P2p2_B.K_ei
+	  ;% P2p2_B.Gain_p
 	  section.data(16).logicalSrcIdx = 15;
 	  section.data(16).dtTransOffset = 15;
 	
-	  ;% P2p2_B.Gain_p
+	  ;% P2p2_B.FrontmotorSaturation
 	  section.data(17).logicalSrcIdx = 16;
 	  section.data(17).dtTransOffset = 16;
 	
-	  ;% P2p2_B.FrontmotorSaturation
+	  ;% P2p2_B.BackmotorSaturation
 	  section.data(18).logicalSrcIdx = 17;
 	  section.data(18).dtTransOffset = 17;
 	
-	  ;% P2p2_B.BackmotorSaturation
+	  ;% P2p2_B.GameController_o4
 	  section.data(19).logicalSrcIdx = 18;
 	  section.data(19).dtTransOffset = 18;
 	
-	  ;% P2p2_B.GameController_o4
+	  ;% P2p2_B.GameController_o5
 	  section.data(20).logicalSrcIdx = 19;
 	  section.data(20).dtTransOffset = 19;
-	
-	  ;% P2p2_B.GameController_o5
-	  section.data(21).logicalSrcIdx = 20;
-	  section.data(21).dtTransOffset = 20;
-	
-	  ;% P2p2_B.Step
-	  section.data(22).logicalSrcIdx = 21;
-	  section.data(22).dtTransOffset = 21;
 	
       nTotData = nTotData + section.nData;
       sigMap.sections(1) = section;
@@ -742,7 +722,7 @@
   ;%*******************
       
     nTotData      = 0; %add to this count as we go
-    nTotSects     = 8;
+    nTotSects     = 7;
     sectIdxOffset = 1;
     
     ;%
@@ -849,60 +829,44 @@
       dworkMap.sections(4) = section;
       clear section
       
-      section.nData     = 13;
-      section.data(13)  = dumData; %prealloc
+      section.nData     = 9;
+      section.data(9)  = dumData; %prealloc
       
-	  ;% P2p2_DW.ToFile_PWORK.FilePtr
+	  ;% P2p2_DW.ElevationScopedegs_PWORK.LoggedData
 	  section.data(1).logicalSrcIdx = 14;
 	  section.data(1).dtTransOffset = 0;
 	
-	  ;% P2p2_DW.ToFile2_PWORK.FilePtr
+	  ;% P2p2_DW.ElevationScopedeg_PWORK.LoggedData
 	  section.data(2).logicalSrcIdx = 15;
 	  section.data(2).dtTransOffset = 1;
 	
-	  ;% P2p2_DW.ToFile3_PWORK.FilePtr
+	  ;% P2p2_DW.PitchScopedeg_PWORK.LoggedData
 	  section.data(3).logicalSrcIdx = 16;
 	  section.data(3).dtTransOffset = 2;
 	
-	  ;% P2p2_DW.ElevationScopedegs_PWORK.LoggedData
+	  ;% P2p2_DW.PtichrateScopedegs_PWORK.LoggedData
 	  section.data(4).logicalSrcIdx = 17;
 	  section.data(4).dtTransOffset = 3;
 	
-	  ;% P2p2_DW.ElevationScopedeg_PWORK.LoggedData
+	  ;% P2p2_DW.TravelrateScopedegs_PWORK.LoggedData
 	  section.data(5).logicalSrcIdx = 18;
 	  section.data(5).dtTransOffset = 4;
 	
-	  ;% P2p2_DW.PitchScopedeg_PWORK.LoggedData
+	  ;% P2p2_DW.TravelScopedeg_PWORK.LoggedData
 	  section.data(6).logicalSrcIdx = 19;
 	  section.data(6).dtTransOffset = 5;
 	
-	  ;% P2p2_DW.PtichrateScopedegs_PWORK.LoggedData
+	  ;% P2p2_DW.HILWriteAnalog_PWORK
 	  section.data(7).logicalSrcIdx = 20;
 	  section.data(7).dtTransOffset = 6;
 	
-	  ;% P2p2_DW.TravelrateScopedegs_PWORK.LoggedData
+	  ;% P2p2_DW.XScope_PWORK.LoggedData
 	  section.data(8).logicalSrcIdx = 21;
 	  section.data(8).dtTransOffset = 7;
 	
-	  ;% P2p2_DW.TravelScopedeg_PWORK.LoggedData
+	  ;% P2p2_DW.YScope_PWORK.LoggedData
 	  section.data(9).logicalSrcIdx = 22;
 	  section.data(9).dtTransOffset = 8;
-	
-	  ;% P2p2_DW.HILWriteAnalog_PWORK
-	  section.data(10).logicalSrcIdx = 23;
-	  section.data(10).dtTransOffset = 9;
-	
-	  ;% P2p2_DW.XScope_PWORK.LoggedData
-	  section.data(11).logicalSrcIdx = 24;
-	  section.data(11).dtTransOffset = 10;
-	
-	  ;% P2p2_DW.YScope_PWORK.LoggedData
-	  section.data(12).logicalSrcIdx = 25;
-	  section.data(12).dtTransOffset = 11;
-	
-	  ;% P2p2_DW.ToFile1_PWORK.FilePtr
-	  section.data(13).logicalSrcIdx = 26;
-	  section.data(13).dtTransOffset = 12;
 	
       nTotData = nTotData + section.nData;
       dworkMap.sections(5) = section;
@@ -912,31 +876,31 @@
       section.data(7)  = dumData; %prealloc
       
 	  ;% P2p2_DW.HILInitialize_ClockModes
-	  section.data(1).logicalSrcIdx = 27;
+	  section.data(1).logicalSrcIdx = 23;
 	  section.data(1).dtTransOffset = 0;
 	
 	  ;% P2p2_DW.HILInitialize_QuadratureModes
-	  section.data(2).logicalSrcIdx = 28;
+	  section.data(2).logicalSrcIdx = 24;
 	  section.data(2).dtTransOffset = 3;
 	
 	  ;% P2p2_DW.HILInitialize_InitialEICounts
-	  section.data(3).logicalSrcIdx = 29;
+	  section.data(3).logicalSrcIdx = 25;
 	  section.data(3).dtTransOffset = 11;
 	
 	  ;% P2p2_DW.HILInitialize_POModeValues
-	  section.data(4).logicalSrcIdx = 30;
+	  section.data(4).logicalSrcIdx = 26;
 	  section.data(4).dtTransOffset = 19;
 	
 	  ;% P2p2_DW.HILInitialize_POAlignValues
-	  section.data(5).logicalSrcIdx = 31;
+	  section.data(5).logicalSrcIdx = 27;
 	  section.data(5).dtTransOffset = 27;
 	
 	  ;% P2p2_DW.HILInitialize_POPolarityVals
-	  section.data(6).logicalSrcIdx = 32;
+	  section.data(6).logicalSrcIdx = 28;
 	  section.data(6).dtTransOffset = 35;
 	
 	  ;% P2p2_DW.HILReadEncoderTimebase_Buffer
-	  section.data(7).logicalSrcIdx = 33;
+	  section.data(7).logicalSrcIdx = 29;
 	  section.data(7).dtTransOffset = 43;
 	
       nTotData = nTotData + section.nData;
@@ -947,34 +911,11 @@
       section.data(1)  = dumData; %prealloc
       
 	  ;% P2p2_DW.HILInitialize_POSortedChans
-	  section.data(1).logicalSrcIdx = 34;
+	  section.data(1).logicalSrcIdx = 30;
 	  section.data(1).dtTransOffset = 0;
 	
       nTotData = nTotData + section.nData;
       dworkMap.sections(7) = section;
-      clear section
-      
-      section.nData     = 4;
-      section.data(4)  = dumData; %prealloc
-      
-	  ;% P2p2_DW.ToFile_IWORK.Count
-	  section.data(1).logicalSrcIdx = 35;
-	  section.data(1).dtTransOffset = 0;
-	
-	  ;% P2p2_DW.ToFile2_IWORK.Count
-	  section.data(2).logicalSrcIdx = 36;
-	  section.data(2).dtTransOffset = 1;
-	
-	  ;% P2p2_DW.ToFile3_IWORK.Count
-	  section.data(3).logicalSrcIdx = 37;
-	  section.data(3).dtTransOffset = 2;
-	
-	  ;% P2p2_DW.ToFile1_IWORK.Count
-	  section.data(4).logicalSrcIdx = 38;
-	  section.data(4).dtTransOffset = 3;
-	
-      nTotData = nTotData + section.nData;
-      dworkMap.sections(8) = section;
       clear section
       
     
@@ -1003,8 +944,8 @@
   ;%
 
 
-  targMap.checksum0 = 4094421977;
-  targMap.checksum1 = 3738269576;
-  targMap.checksum2 = 1829350794;
-  targMap.checksum3 = 2075762084;
+  targMap.checksum0 = 3849907325;
+  targMap.checksum1 = 357152023;
+  targMap.checksum2 = 1368414447;
+  targMap.checksum3 = 569754086;
 

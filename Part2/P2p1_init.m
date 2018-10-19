@@ -4,7 +4,7 @@ K_f = -g * (m_c * l_c - 2 * m_p * l_h) / (l_h * Vs_astrix);
 e_reference = 0;
 
 %%%%%%%%%%% Pitch control
-K_pp = 12;
+K_pp = 10;
 K_pd = 2*sqrt(K_pp / K_1);
 
 s = tf('s');

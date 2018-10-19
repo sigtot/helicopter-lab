@@ -3,9 +3,9 @@
  *
  * Code generation for model "P2p1".
  *
- * Model version              : 1.68
+ * Model version              : 1.70
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Sun Oct 14 20:04:47 2018
+ * C source code generated on : Sat Oct 20 00:42:28 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -23,10 +23,6 @@
 
 /* A global buffer for storing error messages (defined in quanser_common library) */
 EXTERN char _rt_error_message[512];
-int_T rt_WriteMat4FileHeader(FILE *fp,
-  int32_T m,
-  int32_T n,
-  const char_T *name);
 void P2p1_output0(void);
 void P2p1_update0(void);
 void P2p1_output2(void);

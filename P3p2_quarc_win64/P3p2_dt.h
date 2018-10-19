@@ -3,9 +3,9 @@
  *
  * Code generation for model "P3p2".
  *
- * Model version              : 1.70
+ * Model version              : 1.77
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Mon Oct 15 00:05:32 2018
+ * C source code generated on : Sat Oct 20 01:04:02 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -60,7 +60,7 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&P3p2_B.PitchCounttorad), 0, 0, 20 }
+  { (char_T *)(&P3p2_B.RateTransitionx), 0, 0, 21 }
   ,
 
   { (char_T *)(&P3p2_DW.HILInitialize_AIMinimums[0]), 0, 0, 68 },
@@ -71,13 +71,13 @@ static DataTypeTransition rtBTransitions[] = {
 
   { (char_T *)(&P3p2_DW.HILReadEncoderTimebase_Task), 16, 0, 1 },
 
-  { (char_T *)(&P3p2_DW.ToFile_PWORK.FilePtr), 11, 0, 13 },
+  { (char_T *)(&P3p2_DW.ToFile1_PWORK.FilePtr), 11, 0, 11 },
 
-  { (char_T *)(&P3p2_DW.HILInitialize_ClockModes[0]), 6, 0, 48 },
+  { (char_T *)(&P3p2_DW.HILInitialize_ClockModes[0]), 6, 0, 46 },
 
   { (char_T *)(&P3p2_DW.HILInitialize_POSortedChans[0]), 7, 0, 8 },
 
-  { (char_T *)(&P3p2_DW.ToFile_IWORK.Count), 10, 0, 4 }
+  { (char_T *)(&P3p2_DW.ToFile1_IWORK.Count), 10, 0, 2 }
 };
 
 /* data type transition table for block I/O structure */
@@ -88,7 +88,7 @@ static DataTypeTransitionTable rtBTransTable = {
 
 /* data type transitions for Parameters structure */
 static DataTypeTransition rtPTransitions[] = {
-  { (char_T *)(&P3p2_P.Joystick_gain_x), 0, 0, 30 },
+  { (char_T *)(&P3p2_P.Joystick_gain_x), 0, 0, 31 },
 
   { (char_T *)(&P3p2_P.HILReadEncoderTimebase_clock), 6, 0, 10 },
 
@@ -96,7 +96,7 @@ static DataTypeTransition rtPTransitions[] = {
 
   { (char_T *)(&P3p2_P.HILInitialize_active), 8, 0, 35 },
 
-  { (char_T *)(&P3p2_P.PulseGenerator_Amp), 0, 0, 45 },
+  { (char_T *)(&P3p2_P.RateTransitionx_X0), 0, 0, 36 },
 
   { (char_T *)(&P3p2_P.GameController_BufferSize), 5, 0, 1 },
 

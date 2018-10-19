@@ -3,9 +3,9 @@
  *
  * Code generation for model "P3p2".
  *
- * Model version              : 1.70
+ * Model version              : 1.77
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Mon Oct 15 00:05:32 2018
+ * C source code generated on : Sat Oct 20 01:04:02 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -138,10 +138,10 @@ void P3p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
   real_T rtb_HILReadEncoderTimebase_o1;
   real_T rtb_HILReadEncoderTimebase_o2;
   real_T rtb_HILReadEncoderTimebase_o3;
-  real_T rtb_Sum;
-  real_T rtb_Sum1;
+  real_T rtb_Gain_n[2];
+  real_T rtb_TmpSignalConversionAtToFile[6];
+  real_T rtb_TmpSignalConversionAtGain1I[2];
   real_T rtb_Frontgain;
-  real_T rtb_Substract[2];
   int32_T i;
   real_T unnamed_idx_2;
   if (rtmIsMajorTimeStep(P3p2_M)) {
@@ -166,7 +166,7 @@ void P3p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
   }
 
   if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* S-Function (hil_read_encoder_timebase_block): '<S7>/HIL Read Encoder Timebase' */
+    /* S-Function (hil_read_encoder_timebase_block): '<S5>/HIL Read Encoder Timebase' */
 
     /* S-Function Block: P3p2/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
     {
@@ -184,156 +184,180 @@ void P3p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* DiscretePulseGenerator: '<Root>/Pulse Generator' */
-    rtb_Sum = (P3p2_DW.clockTickCounter < P3p2_P.PulseGenerator_Duty) &&
-      (P3p2_DW.clockTickCounter >= 0) ? P3p2_P.PulseGenerator_Amp : 0.0;
-    if (P3p2_DW.clockTickCounter >= P3p2_P.PulseGenerator_Period - 1.0) {
-      P3p2_DW.clockTickCounter = 0;
+    /* RateTransition: '<S6>/Rate Transition: x' */
+    if (P3p2_M->Timing.RateInteraction.TID1_2) {
+      P3p2_B.RateTransitionx = P3p2_DW.RateTransitionx_Buffer0;
+    }
+
+    /* End of RateTransition: '<S6>/Rate Transition: x' */
+
+    /* DeadZone: '<S6>/Dead Zone: x' */
+    if (P3p2_B.RateTransitionx > P3p2_P.DeadZonex_End) {
+      rtb_Frontgain = P3p2_B.RateTransitionx - P3p2_P.DeadZonex_End;
+    } else if (P3p2_B.RateTransitionx >= P3p2_P.DeadZonex_Start) {
+      rtb_Frontgain = 0.0;
     } else {
-      P3p2_DW.clockTickCounter++;
+      rtb_Frontgain = P3p2_B.RateTransitionx - P3p2_P.DeadZonex_Start;
     }
 
-    /* End of DiscretePulseGenerator: '<Root>/Pulse Generator' */
+    /* End of DeadZone: '<S6>/Dead Zone: x' */
 
-    /* ToFile: '<Root>/To File' */
-    if (rtmIsMajorTimeStep(P3p2_M)) {
-      {
-        if (!(++P3p2_DW.ToFile_IWORK.Decimation % 1) &&
-            (P3p2_DW.ToFile_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P3p2_DW.ToFile_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P3p2_DW.ToFile_IWORK.Decimation = 0;
-            u[0] = P3p2_M->Timing.t[1];
-            u[1] = rtb_Sum;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P3p2_M, "Error writing to MAT-file LQR_p_c.mat");
-              return;
-            }
+    /* Gain: '<S6>/Joystick_gain_x' incorporates:
+     *  Gain: '<S6>/Gain: x'
+     */
+    P3p2_B.Joystick_gain_x = P3p2_P.Gainx_Gain * rtb_Frontgain *
+      P3p2_P.Joystick_gain_x;
 
-            if (((++P3p2_DW.ToFile_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file LQR_p_c.mat.\n");
-            }
-          }
-        }
-      }
+    /* RateTransition: '<S6>/Rate Transition: y' */
+    if (P3p2_M->Timing.RateInteraction.TID1_2) {
+      P3p2_B.RateTransitiony = P3p2_DW.RateTransitiony_Buffer0;
     }
 
-    /* DiscretePulseGenerator: '<Root>/Pulse Generator1' */
-    rtb_Sum1 = (P3p2_DW.clockTickCounter_h < P3p2_P.PulseGenerator1_Duty) &&
-      (P3p2_DW.clockTickCounter_h >= 0) ? P3p2_P.PulseGenerator1_Amp : 0.0;
-    if (P3p2_DW.clockTickCounter_h >= P3p2_P.PulseGenerator1_Period - 1.0) {
-      P3p2_DW.clockTickCounter_h = 0;
+    /* End of RateTransition: '<S6>/Rate Transition: y' */
+
+    /* DeadZone: '<S6>/Dead Zone: y' */
+    if (P3p2_B.RateTransitiony > P3p2_P.DeadZoney_End) {
+      rtb_Frontgain = P3p2_B.RateTransitiony - P3p2_P.DeadZoney_End;
+    } else if (P3p2_B.RateTransitiony >= P3p2_P.DeadZoney_Start) {
+      rtb_Frontgain = 0.0;
     } else {
-      P3p2_DW.clockTickCounter_h++;
+      rtb_Frontgain = P3p2_B.RateTransitiony - P3p2_P.DeadZoney_Start;
     }
 
-    /* End of DiscretePulseGenerator: '<Root>/Pulse Generator1' */
+    /* End of DeadZone: '<S6>/Dead Zone: y' */
+
+    /* Gain: '<S6>/Joystick_gain_y' incorporates:
+     *  Gain: '<S6>/Gain: y'
+     */
+    P3p2_B.Joystick_gain_y = P3p2_P.Gainy_Gain * rtb_Frontgain *
+      P3p2_P.Joystick_gain_y;
+
+    /* SignalConversion: '<S7>/TmpSignal ConversionAtGain1Inport1' */
+    rtb_TmpSignalConversionAtGain1I[0] = P3p2_B.Joystick_gain_x;
+    rtb_TmpSignalConversionAtGain1I[1] = P3p2_B.Joystick_gain_y;
+
+    /* Gain: '<S8>/Gain' incorporates:
+     *  SignalConversion: '<S7>/TmpSignal ConversionAtGain1Inport1'
+     */
+    rtb_Gain_n[0] = P3p2_P.Gain_Gain * P3p2_B.Joystick_gain_x;
+    rtb_Gain_n[1] = P3p2_P.Gain_Gain * P3p2_B.Joystick_gain_y;
 
     /* ToFile: '<Root>/To File1' */
     if (rtmIsMajorTimeStep(P3p2_M)) {
       {
         if (!(++P3p2_DW.ToFile1_IWORK.Decimation % 1) &&
-            (P3p2_DW.ToFile1_IWORK.Count*2)+1 < 100000000 ) {
+            (P3p2_DW.ToFile1_IWORK.Count*3)+1 < 100000000 ) {
           FILE *fp = (FILE *) P3p2_DW.ToFile1_PWORK.FilePtr;
           if (fp != (NULL)) {
-            real_T u[2];
+            real_T u[3];
             P3p2_DW.ToFile1_IWORK.Decimation = 0;
             u[0] = P3p2_M->Timing.t[1];
-            u[1] = rtb_Sum1;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
+            u[1] = rtb_Gain_n[0];
+            u[2] = rtb_Gain_n[1];
+            if (fwrite(u, sizeof(real_T), 3, fp) != 3) {
               rtmSetErrorStatus(P3p2_M,
-                                "Error writing to MAT-file LQR_e_c_dot.mat");
+                                "Error writing to MAT-file references.mat");
               return;
             }
 
-            if (((++P3p2_DW.ToFile1_IWORK.Count)*2)+1 >= 100000000) {
+            if (((++P3p2_DW.ToFile1_IWORK.Count)*3)+1 >= 100000000) {
               (void)fprintf(stdout,
                             "*** The ToFile block will stop logging data before\n"
                             "    the simulation has ended, because it has reached\n"
                             "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file LQR_e_c_dot.mat.\n");
+                            "    allowed in MAT-file references.mat.\n");
             }
           }
         }
       }
     }
 
-    /* Gain: '<S7>/Pitch: Count to rad' */
+    /* Gain: '<S5>/Pitch: Count to rad' */
     P3p2_B.PitchCounttorad = P3p2_P.PitchCounttorad_Gain *
       rtb_HILReadEncoderTimebase_o2;
 
-    /* Gain: '<S12>/Gain' */
-    P3p2_B.Gain = P3p2_P.Gain_Gain * P3p2_B.PitchCounttorad;
-
-    /* ToFile: '<Root>/To File2' */
-    if (rtmIsMajorTimeStep(P3p2_M)) {
-      {
-        if (!(++P3p2_DW.ToFile2_IWORK.Decimation % 1) &&
-            (P3p2_DW.ToFile2_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P3p2_DW.ToFile2_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P3p2_DW.ToFile2_IWORK.Decimation = 0;
-            u[0] = P3p2_M->Timing.t[1];
-            u[1] = P3p2_B.Gain;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P3p2_M, "Error writing to MAT-file LQR_p.mat");
-              return;
-            }
-
-            if (((++P3p2_DW.ToFile2_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file LQR_p.mat.\n");
-            }
-          }
-        }
-      }
-    }
-
-    /* Gain: '<S7>/Elevation: Count to rad' */
-    P3p2_B.ElevationCounttorad = P3p2_P.ElevationCounttorad_Gain *
-      rtb_HILReadEncoderTimebase_o3;
+    /* Gain: '<S11>/Gain' */
+    P3p2_B.Gain = P3p2_P.Gain_Gain_a * P3p2_B.PitchCounttorad;
   }
 
-  /* Gain: '<S11>/Gain' incorporates:
-   *  TransferFcn: '<S7>/Elevation: Transfer Fcn'
+  /* Gain: '<S12>/Gain' incorporates:
+   *  TransferFcn: '<S5>/Pitch: Transfer Fcn'
+   */
+  P3p2_B.Gain_b = (P3p2_P.PitchTransferFcn_C * P3p2_X.PitchTransferFcn_CSTATE +
+                   P3p2_P.PitchTransferFcn_D * P3p2_B.PitchCounttorad) *
+    P3p2_P.Gain_Gain_ae;
+  if (rtmIsMajorTimeStep(P3p2_M)) {
+    /* Gain: '<S5>/Elevation: Count to rad' */
+    P3p2_B.ElevationCounttorad = P3p2_P.ElevationCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o3;
+
+    /* Sum: '<S5>/Sum' incorporates:
+     *  Constant: '<S5>/Elevation offset'
+     *  Gain: '<S9>/Gain'
+     */
+    P3p2_B.Sum = P3p2_P.Gain_Gain_l * P3p2_B.ElevationCounttorad +
+      P3p2_P.elevation_offset;
+  }
+
+  /* Gain: '<S10>/Gain' incorporates:
+   *  TransferFcn: '<S5>/Elevation: Transfer Fcn'
    */
   P3p2_B.Gain_d = (P3p2_P.ElevationTransferFcn_C *
                    P3p2_X.ElevationTransferFcn_CSTATE +
                    P3p2_P.ElevationTransferFcn_D * P3p2_B.ElevationCounttorad) *
     P3p2_P.Gain_Gain_n;
   if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* ToFile: '<Root>/To File3' */
+    /* Gain: '<S5>/Travel: Count to rad' */
+    P3p2_B.TravelCounttorad = P3p2_P.TravelCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o1;
+
+    /* Gain: '<S13>/Gain' */
+    P3p2_B.Gain_p = P3p2_P.Gain_Gain_ar * P3p2_B.TravelCounttorad;
+  }
+
+  /* Gain: '<S14>/Gain' incorporates:
+   *  TransferFcn: '<S5>/Travel: Transfer Fcn'
+   */
+  P3p2_B.Gain_dc = (P3p2_P.TravelTransferFcn_C * P3p2_X.TravelTransferFcn_CSTATE
+                    + P3p2_P.TravelTransferFcn_D * P3p2_B.TravelCounttorad) *
+    P3p2_P.Gain_Gain_lu;
+  if (rtmIsMajorTimeStep(P3p2_M)) {
+    /* SignalConversion: '<Root>/TmpSignal ConversionAtTo File9Inport1' */
+    rtb_TmpSignalConversionAtToFile[0] = P3p2_B.Gain;
+    rtb_TmpSignalConversionAtToFile[1] = P3p2_B.Gain_b;
+    rtb_TmpSignalConversionAtToFile[2] = P3p2_B.Sum;
+    rtb_TmpSignalConversionAtToFile[3] = P3p2_B.Gain_d;
+    rtb_TmpSignalConversionAtToFile[4] = P3p2_B.Gain_p;
+    rtb_TmpSignalConversionAtToFile[5] = P3p2_B.Gain_dc;
+
+    /* ToFile: '<Root>/To File9' */
     if (rtmIsMajorTimeStep(P3p2_M)) {
       {
-        if (!(++P3p2_DW.ToFile3_IWORK.Decimation % 1) &&
-            (P3p2_DW.ToFile3_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P3p2_DW.ToFile3_PWORK.FilePtr;
+        if (!(++P3p2_DW.ToFile9_IWORK.Decimation % 1) &&
+            (P3p2_DW.ToFile9_IWORK.Count*7)+1 < 100000000 ) {
+          FILE *fp = (FILE *) P3p2_DW.ToFile9_PWORK.FilePtr;
           if (fp != (NULL)) {
-            real_T u[2];
-            P3p2_DW.ToFile3_IWORK.Decimation = 0;
+            real_T u[7];
+            P3p2_DW.ToFile9_IWORK.Decimation = 0;
             u[0] = P3p2_M->Timing.t[1];
-            u[1] = P3p2_B.Gain_d;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
+            u[1] = rtb_TmpSignalConversionAtToFile[0];
+            u[2] = rtb_TmpSignalConversionAtToFile[1];
+            u[3] = rtb_TmpSignalConversionAtToFile[2];
+            u[4] = rtb_TmpSignalConversionAtToFile[3];
+            u[5] = rtb_TmpSignalConversionAtToFile[4];
+            u[6] = rtb_TmpSignalConversionAtToFile[5];
+            if (fwrite(u, sizeof(real_T), 7, fp) != 7) {
               rtmSetErrorStatus(P3p2_M,
-                                "Error writing to MAT-file LQR_e_dot.mat");
+                                "Error writing to MAT-file measurements.mat");
               return;
             }
 
-            if (((++P3p2_DW.ToFile3_IWORK.Count)*2)+1 >= 100000000) {
+            if (((++P3p2_DW.ToFile9_IWORK.Count)*7)+1 >= 100000000) {
               (void)fprintf(stdout,
                             "*** The ToFile block will stop logging data before\n"
                             "    the simulation has ended, because it has reached\n"
                             "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file LQR_e_dot.mat.\n");
+                            "    allowed in MAT-file measurements.mat.\n");
             }
           }
         }
@@ -342,160 +366,79 @@ void P3p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
 
     /* Gain: '<S1>/Gain1' */
     P3p2_B.Gain1 = P3p2_P.Gain1_Gain * P3p2_B.Gain;
-  }
 
-  /* Gain: '<S13>/Gain' incorporates:
-   *  TransferFcn: '<S7>/Pitch: Transfer Fcn'
-   */
-  P3p2_B.Gain_b = (P3p2_P.PitchTransferFcn_C * P3p2_X.PitchTransferFcn_CSTATE +
-                   P3p2_P.PitchTransferFcn_D * P3p2_B.PitchCounttorad) *
-    P3p2_P.Gain_Gain_a;
-  if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* Gain: '<S5>/Gain1' */
-    rtb_Frontgain = P3p2_P.Gain1_Gain_c * rtb_Sum1;
-
-    /* RateTransition: '<S8>/Rate Transition: x' */
-    if (P3p2_M->Timing.RateInteraction.TID1_2) {
-      P3p2_B.RateTransitionx = P3p2_DW.RateTransitionx_Buffer0;
-    }
-
-    /* End of RateTransition: '<S8>/Rate Transition: x' */
-
-    /* DeadZone: '<S8>/Dead Zone: x' */
-    if (P3p2_B.RateTransitionx > P3p2_P.DeadZonex_End) {
-      rtb_Sum1 = P3p2_B.RateTransitionx - P3p2_P.DeadZonex_End;
-    } else if (P3p2_B.RateTransitionx >= P3p2_P.DeadZonex_Start) {
-      rtb_Sum1 = 0.0;
-    } else {
-      rtb_Sum1 = P3p2_B.RateTransitionx - P3p2_P.DeadZonex_Start;
-    }
-
-    /* End of DeadZone: '<S8>/Dead Zone: x' */
-
-    /* Gain: '<S8>/Joystick_gain_x' incorporates:
-     *  Gain: '<S8>/Gain: x'
-     */
-    P3p2_B.Joystick_gain_x = P3p2_P.Gainx_Gain * rtb_Sum1 *
-      P3p2_P.Joystick_gain_x;
-
-    /* Sum: '<Root>/Sum1' incorporates:
-     *  Gain: '<S4>/Gain1'
-     */
-    rtb_Sum1 = P3p2_P.Gain1_Gain_l * rtb_Sum + P3p2_B.Joystick_gain_x;
-
-    /* RateTransition: '<S8>/Rate Transition: y' */
-    if (P3p2_M->Timing.RateInteraction.TID1_2) {
-      P3p2_B.RateTransitiony = P3p2_DW.RateTransitiony_Buffer0;
-    }
-
-    /* End of RateTransition: '<S8>/Rate Transition: y' */
-
-    /* DeadZone: '<S8>/Dead Zone: y' */
-    if (P3p2_B.RateTransitiony > P3p2_P.DeadZoney_End) {
-      rtb_Sum = P3p2_B.RateTransitiony - P3p2_P.DeadZoney_End;
-    } else if (P3p2_B.RateTransitiony >= P3p2_P.DeadZoney_Start) {
-      rtb_Sum = 0.0;
-    } else {
-      rtb_Sum = P3p2_B.RateTransitiony - P3p2_P.DeadZoney_Start;
-    }
-
-    /* End of DeadZone: '<S8>/Dead Zone: y' */
-
-    /* Gain: '<S8>/Joystick_gain_y' incorporates:
-     *  Gain: '<S8>/Gain: y'
-     */
-    P3p2_B.Joystick_gain_y = P3p2_P.Gainy_Gain * rtb_Sum *
-      P3p2_P.Joystick_gain_y;
-
-    /* Sum: '<Root>/Sum' */
-    rtb_Sum = P3p2_B.Joystick_gain_y + rtb_Frontgain;
-
-    /* Gain: '<S9>/Gain1' incorporates:
-     *  SignalConversion: '<S9>/TmpSignal ConversionAtGain1Inport1'
-     */
+    /* Gain: '<S7>/Gain1' */
     P3p2_B.Gain1_e[0] = 0.0;
-    P3p2_B.Gain1_e[0] += P3p2_P.P[0] * rtb_Sum1;
-    P3p2_B.Gain1_e[0] += P3p2_P.P[2] * rtb_Sum;
+    P3p2_B.Gain1_e[0] += P3p2_P.P[0] * rtb_TmpSignalConversionAtGain1I[0];
+    P3p2_B.Gain1_e[0] += P3p2_P.P[2] * rtb_TmpSignalConversionAtGain1I[1];
     P3p2_B.Gain1_e[1] = 0.0;
-    P3p2_B.Gain1_e[1] += P3p2_P.P[1] * rtb_Sum1;
-    P3p2_B.Gain1_e[1] += P3p2_P.P[3] * rtb_Sum;
+    P3p2_B.Gain1_e[1] += P3p2_P.P[1] * rtb_TmpSignalConversionAtGain1I[0];
+    P3p2_B.Gain1_e[1] += P3p2_P.P[3] * rtb_TmpSignalConversionAtGain1I[1];
   }
 
-  /* SignalConversion: '<S9>/TmpSignal ConversionAtGain2Inport1' incorporates:
+  /* SignalConversion: '<S7>/TmpSignal ConversionAtGain2Inport1' incorporates:
    *  Gain: '<S2>/Gain1'
    *  Gain: '<S3>/Gain1'
    */
   rtb_Frontgain = P3p2_P.Gain1_Gain_f * P3p2_B.Gain_b;
   unnamed_idx_2 = P3p2_P.Gain1_Gain_b * P3p2_B.Gain_d;
 
-  /* Sum: '<S9>/Substract' incorporates:
-   *  Gain: '<S9>/Gain2'
-   *  SignalConversion: '<S9>/TmpSignal ConversionAtGain2Inport1'
+  /* Sum: '<S7>/Substract' incorporates:
+   *  Gain: '<S7>/Gain2'
+   *  SignalConversion: '<S7>/TmpSignal ConversionAtGain2Inport1'
    */
   for (i = 0; i < 2; i++) {
-    rtb_Substract[i] = P3p2_B.Gain1_e[i] - ((P3p2_P.K_wo_integral[i + 2] *
-      rtb_Frontgain + P3p2_P.K_wo_integral[i] * P3p2_B.Gain1) +
-      P3p2_P.K_wo_integral[i + 4] * unnamed_idx_2);
+    rtb_TmpSignalConversionAtGain1I[i] = P3p2_B.Gain1_e[i] -
+      ((P3p2_P.K_wo_integral[i + 2] * rtb_Frontgain + P3p2_P.K_wo_integral[i] *
+        P3p2_B.Gain1) + P3p2_P.K_wo_integral[i + 4] * unnamed_idx_2);
   }
 
-  /* End of Sum: '<S9>/Substract' */
+  /* End of Sum: '<S7>/Substract' */
   if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* Sum: '<S7>/Sum' incorporates:
-     *  Constant: '<S7>/Elevation offset'
-     *  Gain: '<S10>/Gain'
-     */
-    P3p2_B.Sum = P3p2_P.Gain_Gain_l * P3p2_B.ElevationCounttorad +
-      P3p2_P.elevation_offset;
-
-    /* Gain: '<S7>/Travel: Count to rad' */
-    P3p2_B.TravelCounttorad = P3p2_P.TravelCounttorad_Gain *
-      rtb_HILReadEncoderTimebase_o1;
+    /* Constant: '<Root>/Vs_asterix' */
+    P3p2_B.Vs_asterix = P3p2_P.Vs_astrix;
   }
 
-  /* Gain: '<S15>/Gain' incorporates:
-   *  TransferFcn: '<S7>/Travel: Transfer Fcn'
-   */
-  P3p2_B.Gain_dc = (P3p2_P.TravelTransferFcn_C * P3p2_X.TravelTransferFcn_CSTATE
-                    + P3p2_P.TravelTransferFcn_D * P3p2_B.TravelCounttorad) *
-    P3p2_P.Gain_Gain_lu;
+  /* Sum: '<Root>/Sum2' */
+  rtb_Frontgain = rtb_TmpSignalConversionAtGain1I[0] + P3p2_B.Vs_asterix;
   if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* Gain: '<S14>/Gain' */
-    P3p2_B.Gain_p = P3p2_P.Gain_Gain_ar * P3p2_B.TravelCounttorad;
   }
 
-  /* Gain: '<S6>/Front gain' incorporates:
-   *  Sum: '<S6>/Add'
+  /* Gain: '<S4>/Front gain' incorporates:
+   *  Sum: '<S4>/Add'
    */
-  rtb_Frontgain = (rtb_Substract[1] + rtb_Substract[0]) * P3p2_P.Frontgain_Gain;
+  unnamed_idx_2 = (rtb_TmpSignalConversionAtGain1I[1] + rtb_Frontgain) *
+    P3p2_P.Frontgain_Gain;
 
-  /* Saturate: '<S7>/Front motor: Saturation' */
-  if (rtb_Frontgain > P3p2_P.FrontmotorSaturation_UpperSat) {
+  /* Saturate: '<S5>/Front motor: Saturation' */
+  if (unnamed_idx_2 > P3p2_P.FrontmotorSaturation_UpperSat) {
     P3p2_B.FrontmotorSaturation = P3p2_P.FrontmotorSaturation_UpperSat;
-  } else if (rtb_Frontgain < P3p2_P.FrontmotorSaturation_LowerSat) {
+  } else if (unnamed_idx_2 < P3p2_P.FrontmotorSaturation_LowerSat) {
     P3p2_B.FrontmotorSaturation = P3p2_P.FrontmotorSaturation_LowerSat;
   } else {
-    P3p2_B.FrontmotorSaturation = rtb_Frontgain;
+    P3p2_B.FrontmotorSaturation = unnamed_idx_2;
   }
 
-  /* End of Saturate: '<S7>/Front motor: Saturation' */
+  /* End of Saturate: '<S5>/Front motor: Saturation' */
 
-  /* Gain: '<S6>/Back gain' incorporates:
-   *  Sum: '<S6>/Subtract'
+  /* Gain: '<S4>/Back gain' incorporates:
+   *  Sum: '<S4>/Subtract'
    */
-  rtb_Frontgain = (rtb_Substract[0] - rtb_Substract[1]) * P3p2_P.Backgain_Gain;
+  unnamed_idx_2 = (rtb_Frontgain - rtb_TmpSignalConversionAtGain1I[1]) *
+    P3p2_P.Backgain_Gain;
 
-  /* Saturate: '<S7>/Back motor: Saturation' */
-  if (rtb_Frontgain > P3p2_P.BackmotorSaturation_UpperSat) {
+  /* Saturate: '<S5>/Back motor: Saturation' */
+  if (unnamed_idx_2 > P3p2_P.BackmotorSaturation_UpperSat) {
     P3p2_B.BackmotorSaturation = P3p2_P.BackmotorSaturation_UpperSat;
-  } else if (rtb_Frontgain < P3p2_P.BackmotorSaturation_LowerSat) {
+  } else if (unnamed_idx_2 < P3p2_P.BackmotorSaturation_LowerSat) {
     P3p2_B.BackmotorSaturation = P3p2_P.BackmotorSaturation_LowerSat;
   } else {
-    P3p2_B.BackmotorSaturation = rtb_Frontgain;
+    P3p2_B.BackmotorSaturation = unnamed_idx_2;
   }
 
-  /* End of Saturate: '<S7>/Back motor: Saturation' */
+  /* End of Saturate: '<S5>/Back motor: Saturation' */
   if (rtmIsMajorTimeStep(P3p2_M)) {
-    /* S-Function (hil_write_analog_block): '<S7>/HIL Write Analog' */
+    /* S-Function (hil_write_analog_block): '<S5>/HIL Write Analog' */
 
     /* S-Function Block: P3p2/Heli 3D/HIL Write Analog (hil_write_analog_block) */
     {
@@ -558,19 +501,19 @@ void P3p2_derivatives(void)
   XDot_P3p2_T *_rtXdot;
   _rtXdot = ((XDot_P3p2_T *) P3p2_M->ModelData.derivs);
 
-  /* Derivatives for TransferFcn: '<S7>/Elevation: Transfer Fcn' */
-  _rtXdot->ElevationTransferFcn_CSTATE = 0.0;
-  _rtXdot->ElevationTransferFcn_CSTATE += P3p2_P.ElevationTransferFcn_A *
-    P3p2_X.ElevationTransferFcn_CSTATE;
-  _rtXdot->ElevationTransferFcn_CSTATE += P3p2_B.ElevationCounttorad;
-
-  /* Derivatives for TransferFcn: '<S7>/Pitch: Transfer Fcn' */
+  /* Derivatives for TransferFcn: '<S5>/Pitch: Transfer Fcn' */
   _rtXdot->PitchTransferFcn_CSTATE = 0.0;
   _rtXdot->PitchTransferFcn_CSTATE += P3p2_P.PitchTransferFcn_A *
     P3p2_X.PitchTransferFcn_CSTATE;
   _rtXdot->PitchTransferFcn_CSTATE += P3p2_B.PitchCounttorad;
 
-  /* Derivatives for TransferFcn: '<S7>/Travel: Transfer Fcn' */
+  /* Derivatives for TransferFcn: '<S5>/Elevation: Transfer Fcn' */
+  _rtXdot->ElevationTransferFcn_CSTATE = 0.0;
+  _rtXdot->ElevationTransferFcn_CSTATE += P3p2_P.ElevationTransferFcn_A *
+    P3p2_X.ElevationTransferFcn_CSTATE;
+  _rtXdot->ElevationTransferFcn_CSTATE += P3p2_B.ElevationCounttorad;
+
+  /* Derivatives for TransferFcn: '<S5>/Travel: Transfer Fcn' */
   _rtXdot->TravelTransferFcn_CSTATE = 0.0;
   _rtXdot->TravelTransferFcn_CSTATE += P3p2_P.TravelTransferFcn_A *
     P3p2_X.TravelTransferFcn_CSTATE;
@@ -580,7 +523,7 @@ void P3p2_derivatives(void)
 /* Model output function for TID2 */
 void P3p2_output2(void)                /* Sample time: [0.01s, 0.0s] */
 {
-  /* S-Function (game_controller_block): '<S8>/Game Controller' */
+  /* S-Function (game_controller_block): '<S6>/Game Controller' */
 
   /* S-Function Block: P3p2/Joystick/Game Controller (game_controller_block) */
   {
@@ -604,10 +547,10 @@ void P3p2_output2(void)                /* Sample time: [0.01s, 0.0s] */
 /* Model update function for TID2 */
 void P3p2_update2(void)                /* Sample time: [0.01s, 0.0s] */
 {
-  /* Update for RateTransition: '<S8>/Rate Transition: x' */
+  /* Update for RateTransition: '<S6>/Rate Transition: x' */
   P3p2_DW.RateTransitionx_Buffer0 = P3p2_B.GameController_o4;
 
-  /* Update for RateTransition: '<S8>/Rate Transition: y' */
+  /* Update for RateTransition: '<S6>/Rate Transition: y' */
   P3p2_DW.RateTransitiony_Buffer0 = P3p2_B.GameController_o5;
 
   /* Update absolute time */
@@ -1014,7 +957,7 @@ void P3p2_initialize(void)
     }
   }
 
-  /* Start for S-Function (hil_read_encoder_timebase_block): '<S7>/HIL Read Encoder Timebase' */
+  /* Start for S-Function (hil_read_encoder_timebase_block): '<S5>/HIL Read Encoder Timebase' */
 
   /* S-Function Block: P3p2/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
   {
@@ -1030,44 +973,24 @@ void P3p2_initialize(void)
     }
   }
 
-  /* Start for DiscretePulseGenerator: '<Root>/Pulse Generator' */
-  P3p2_DW.clockTickCounter = 0;
+  /* Start for RateTransition: '<S6>/Rate Transition: x' */
+  P3p2_B.RateTransitionx = P3p2_P.RateTransitionx_X0;
 
-  /* Start for ToFile: '<Root>/To File' */
-  {
-    char fileName[509] = "LQR_p_c.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P3p2_M, "Error creating .mat file LQR_p_c.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P3p2_M,
-                        "Error writing mat file header to file LQR_p_c.mat");
-      return;
-    }
-
-    P3p2_DW.ToFile_IWORK.Count = 0;
-    P3p2_DW.ToFile_IWORK.Decimation = -1;
-    P3p2_DW.ToFile_PWORK.FilePtr = fp;
-  }
-
-  /* Start for DiscretePulseGenerator: '<Root>/Pulse Generator1' */
-  P3p2_DW.clockTickCounter_h = 0;
+  /* Start for RateTransition: '<S6>/Rate Transition: y' */
+  P3p2_B.RateTransitiony = P3p2_P.RateTransitiony_X0;
 
   /* Start for ToFile: '<Root>/To File1' */
   {
-    char fileName[509] = "LQR_e_c_dot.mat";
+    char fileName[509] = "references.mat";
     FILE *fp = (NULL);
     if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P3p2_M, "Error creating .mat file LQR_e_c_dot.mat");
+      rtmSetErrorStatus(P3p2_M, "Error creating .mat file references.mat");
       return;
     }
 
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+    if (rt_WriteMat4FileHeader(fp,3,0,"data")) {
       rtmSetErrorStatus(P3p2_M,
-                        "Error writing mat file header to file LQR_e_c_dot.mat");
+                        "Error writing mat file header to file references.mat");
       return;
     }
 
@@ -1076,53 +999,27 @@ void P3p2_initialize(void)
     P3p2_DW.ToFile1_PWORK.FilePtr = fp;
   }
 
-  /* Start for ToFile: '<Root>/To File2' */
+  /* Start for ToFile: '<Root>/To File9' */
   {
-    char fileName[509] = "LQR_p.mat";
+    char fileName[509] = "measurements.mat";
     FILE *fp = (NULL);
     if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P3p2_M, "Error creating .mat file LQR_p.mat");
+      rtmSetErrorStatus(P3p2_M, "Error creating .mat file measurements.mat");
       return;
     }
 
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+    if (rt_WriteMat4FileHeader(fp,7,0,"data")) {
       rtmSetErrorStatus(P3p2_M,
-                        "Error writing mat file header to file LQR_p.mat");
+                        "Error writing mat file header to file measurements.mat");
       return;
     }
 
-    P3p2_DW.ToFile2_IWORK.Count = 0;
-    P3p2_DW.ToFile2_IWORK.Decimation = -1;
-    P3p2_DW.ToFile2_PWORK.FilePtr = fp;
+    P3p2_DW.ToFile9_IWORK.Count = 0;
+    P3p2_DW.ToFile9_IWORK.Decimation = -1;
+    P3p2_DW.ToFile9_PWORK.FilePtr = fp;
   }
 
-  /* Start for ToFile: '<Root>/To File3' */
-  {
-    char fileName[509] = "LQR_e_dot.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P3p2_M, "Error creating .mat file LQR_e_dot.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P3p2_M,
-                        "Error writing mat file header to file LQR_e_dot.mat");
-      return;
-    }
-
-    P3p2_DW.ToFile3_IWORK.Count = 0;
-    P3p2_DW.ToFile3_IWORK.Decimation = -1;
-    P3p2_DW.ToFile3_PWORK.FilePtr = fp;
-  }
-
-  /* Start for RateTransition: '<S8>/Rate Transition: x' */
-  P3p2_B.RateTransitionx = P3p2_P.RateTransitionx_X0;
-
-  /* Start for RateTransition: '<S8>/Rate Transition: y' */
-  P3p2_B.RateTransitiony = P3p2_P.RateTransitiony_X0;
-
-  /* Start for S-Function (game_controller_block): '<S8>/Game Controller' */
+  /* Start for S-Function (game_controller_block): '<S6>/Game Controller' */
 
   /* S-Function Block: P3p2/Joystick/Game Controller (game_controller_block) */
   {
@@ -1151,19 +1048,19 @@ void P3p2_initialize(void)
     }
   }
 
-  /* InitializeConditions for TransferFcn: '<S7>/Elevation: Transfer Fcn' */
-  P3p2_X.ElevationTransferFcn_CSTATE = 0.0;
-
-  /* InitializeConditions for TransferFcn: '<S7>/Pitch: Transfer Fcn' */
-  P3p2_X.PitchTransferFcn_CSTATE = 0.0;
-
-  /* InitializeConditions for RateTransition: '<S8>/Rate Transition: x' */
+  /* InitializeConditions for RateTransition: '<S6>/Rate Transition: x' */
   P3p2_DW.RateTransitionx_Buffer0 = P3p2_P.RateTransitionx_X0;
 
-  /* InitializeConditions for RateTransition: '<S8>/Rate Transition: y' */
+  /* InitializeConditions for RateTransition: '<S6>/Rate Transition: y' */
   P3p2_DW.RateTransitiony_Buffer0 = P3p2_P.RateTransitiony_X0;
 
-  /* InitializeConditions for TransferFcn: '<S7>/Travel: Transfer Fcn' */
+  /* InitializeConditions for TransferFcn: '<S5>/Pitch: Transfer Fcn' */
+  P3p2_X.PitchTransferFcn_CSTATE = 0.0;
+
+  /* InitializeConditions for TransferFcn: '<S5>/Elevation: Transfer Fcn' */
+  P3p2_X.ElevationTransferFcn_CSTATE = 0.0;
+
+  /* InitializeConditions for TransferFcn: '<S5>/Travel: Transfer Fcn' */
   P3p2_X.TravelTransferFcn_CSTATE = 0.0;
 }
 
@@ -1261,57 +1158,28 @@ void P3p2_terminate(void)
     P3p2_DW.HILInitialize_Card = NULL;
   }
 
-  /* Terminate for ToFile: '<Root>/To File' */
-  {
-    FILE *fp = (FILE *) P3p2_DW.ToFile_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "LQR_p_c.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_p_c.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file LQR_p_c.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P3p2_DW.ToFile_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P3p2_M,
-                          "Error writing header for ans to MAT-file LQR_p_c.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_p_c.mat");
-        return;
-      }
-
-      P3p2_DW.ToFile_PWORK.FilePtr = (NULL);
-    }
-  }
-
   /* Terminate for ToFile: '<Root>/To File1' */
   {
     FILE *fp = (FILE *) P3p2_DW.ToFile1_PWORK.FilePtr;
     if (fp != (NULL)) {
-      char fileName[509] = "LQR_e_c_dot.mat";
+      char fileName[509] = "references.mat";
       if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_e_c_dot.mat");
+        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file references.mat");
         return;
       }
 
       if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file LQR_e_c_dot.mat");
+        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file references.mat");
         return;
       }
 
-      if (rt_WriteMat4FileHeader(fp, 2, P3p2_DW.ToFile1_IWORK.Count, "ans")) {
+      if (rt_WriteMat4FileHeader(fp, 3, P3p2_DW.ToFile1_IWORK.Count, "data")) {
         rtmSetErrorStatus(P3p2_M,
-                          "Error writing header for ans to MAT-file LQR_e_c_dot.mat");
+                          "Error writing header for data to MAT-file references.mat");
       }
 
       if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_e_c_dot.mat");
+        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file references.mat");
         return;
       }
 
@@ -1319,65 +1187,36 @@ void P3p2_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<Root>/To File2' */
+  /* Terminate for ToFile: '<Root>/To File9' */
   {
-    FILE *fp = (FILE *) P3p2_DW.ToFile2_PWORK.FilePtr;
+    FILE *fp = (FILE *) P3p2_DW.ToFile9_PWORK.FilePtr;
     if (fp != (NULL)) {
-      char fileName[509] = "LQR_p.mat";
+      char fileName[509] = "measurements.mat";
       if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_p.mat");
+        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file measurements.mat");
         return;
       }
 
       if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file LQR_p.mat");
+        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file measurements.mat");
         return;
       }
 
-      if (rt_WriteMat4FileHeader(fp, 2, P3p2_DW.ToFile2_IWORK.Count, "ans")) {
+      if (rt_WriteMat4FileHeader(fp, 7, P3p2_DW.ToFile9_IWORK.Count, "data")) {
         rtmSetErrorStatus(P3p2_M,
-                          "Error writing header for ans to MAT-file LQR_p.mat");
+                          "Error writing header for data to MAT-file measurements.mat");
       }
 
       if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_p.mat");
+        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file measurements.mat");
         return;
       }
 
-      P3p2_DW.ToFile2_PWORK.FilePtr = (NULL);
+      P3p2_DW.ToFile9_PWORK.FilePtr = (NULL);
     }
   }
 
-  /* Terminate for ToFile: '<Root>/To File3' */
-  {
-    FILE *fp = (FILE *) P3p2_DW.ToFile3_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "LQR_e_dot.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_e_dot.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P3p2_M, "Error reopening MAT-file LQR_e_dot.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P3p2_DW.ToFile3_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P3p2_M,
-                          "Error writing header for ans to MAT-file LQR_e_dot.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P3p2_M, "Error closing MAT-file LQR_e_dot.mat");
-        return;
-      }
-
-      P3p2_DW.ToFile3_PWORK.FilePtr = (NULL);
-    }
-  }
-
-  /* Terminate for S-Function (game_controller_block): '<S8>/Game Controller' */
+  /* Terminate for S-Function (game_controller_block): '<S6>/Game Controller' */
 
   /* S-Function Block: P3p2/Joystick/Game Controller (game_controller_block) */
   {
@@ -1513,16 +1352,16 @@ RT_MODEL_P3p2_T *P3p2(void)
     P3p2_M->Timing.sampleHits = (&mdlSampleHits[0]);
   }
 
-  rtmSetTFinal(P3p2_M, -1);
+  rtmSetTFinal(P3p2_M, 45.0);
   P3p2_M->Timing.stepSize0 = 0.002;
   P3p2_M->Timing.stepSize1 = 0.002;
   P3p2_M->Timing.stepSize2 = 0.01;
 
   /* External mode info */
-  P3p2_M->Sizes.checksums[0] = (2667712320U);
-  P3p2_M->Sizes.checksums[1] = (1926583265U);
-  P3p2_M->Sizes.checksums[2] = (3692195470U);
-  P3p2_M->Sizes.checksums[3] = (2709047371U);
+  P3p2_M->Sizes.checksums[0] = (3727014517U);
+  P3p2_M->Sizes.checksums[1] = (4228762474U);
+  P3p2_M->Sizes.checksums[2] = (385953569U);
+  P3p2_M->Sizes.checksums[3] = (2249444554U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -1546,22 +1385,23 @@ RT_MODEL_P3p2_T *P3p2(void)
   P3p2_M->ModelData.blockIO = ((void *) &P3p2_B);
 
   {
-    P3p2_B.PitchCounttorad = 0.0;
-    P3p2_B.Gain = 0.0;
-    P3p2_B.ElevationCounttorad = 0.0;
-    P3p2_B.Gain_d = 0.0;
-    P3p2_B.Gain1 = 0.0;
-    P3p2_B.Gain_b = 0.0;
     P3p2_B.RateTransitionx = 0.0;
     P3p2_B.Joystick_gain_x = 0.0;
     P3p2_B.RateTransitiony = 0.0;
     P3p2_B.Joystick_gain_y = 0.0;
+    P3p2_B.PitchCounttorad = 0.0;
+    P3p2_B.Gain = 0.0;
+    P3p2_B.Gain_b = 0.0;
+    P3p2_B.ElevationCounttorad = 0.0;
+    P3p2_B.Sum = 0.0;
+    P3p2_B.Gain_d = 0.0;
+    P3p2_B.TravelCounttorad = 0.0;
+    P3p2_B.Gain_p = 0.0;
+    P3p2_B.Gain_dc = 0.0;
+    P3p2_B.Gain1 = 0.0;
     P3p2_B.Gain1_e[0] = 0.0;
     P3p2_B.Gain1_e[1] = 0.0;
-    P3p2_B.Sum = 0.0;
-    P3p2_B.TravelCounttorad = 0.0;
-    P3p2_B.Gain_dc = 0.0;
-    P3p2_B.Gain_p = 0.0;
+    P3p2_B.Vs_asterix = 0.0;
     P3p2_B.FrontmotorSaturation = 0.0;
     P3p2_B.BackmotorSaturation = 0.0;
     P3p2_B.GameController_o4 = 0.0;
@@ -1668,9 +1508,9 @@ RT_MODEL_P3p2_T *P3p2(void)
   P3p2_M->Sizes.numU = (0);            /* Number of model inputs */
   P3p2_M->Sizes.sysDirFeedThru = (0);  /* The model is not direct feedthrough */
   P3p2_M->Sizes.numSampTimes = (3);    /* Number of sample times */
-  P3p2_M->Sizes.numBlocks = (58);      /* Number of blocks */
-  P3p2_M->Sizes.numBlockIO = (19);     /* Number of block outputs */
-  P3p2_M->Sizes.numBlockPrms = (165);  /* Sum of parameter "widths" */
+  P3p2_M->Sizes.numBlocks = (54);      /* Number of blocks */
+  P3p2_M->Sizes.numBlockIO = (20);     /* Number of block outputs */
+  P3p2_M->Sizes.numBlockPrms = (157);  /* Sum of parameter "widths" */
   return P3p2_M;
 }
 

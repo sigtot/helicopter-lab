@@ -5,7 +5,7 @@
  *
  * Model version              : 1.70
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Sun Oct 14 22:51:40 2018
+ * C source code generated on : Sat Oct 20 00:57:49 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -30,34 +30,6 @@ DW_P2p2_T P2p2_DW;
 RT_MODEL_P2p2_T P2p2_M_;
 RT_MODEL_P2p2_T *const P2p2_M = &P2p2_M_;
 static void rate_monotonic_scheduler(void);
-
-/*
- * Writes out MAT-file header.  Returns success or failure.
- * Returns:
- *      0 - success
- *      1 - failure
- */
-int_T rt_WriteMat4FileHeader(FILE *fp, int32_T m, int32_T n, const char *name)
-{
-  typedef enum { ELITTLE_ENDIAN, EBIG_ENDIAN } ByteOrder;
-
-  int16_T one = 1;
-  ByteOrder byteOrder = (*((int8_T *)&one)==1) ? ELITTLE_ENDIAN : EBIG_ENDIAN;
-  int32_T type = (byteOrder == ELITTLE_ENDIAN) ? 0: 1000;
-  int32_T imagf = 0;
-  int32_T name_len = (int32_T)strlen(name) + 1;
-  if ((fwrite(&type, sizeof(int32_T), 1, fp) == 0) ||
-      (fwrite(&m, sizeof(int32_T), 1, fp) == 0) ||
-      (fwrite(&n, sizeof(int32_T), 1, fp) == 0) ||
-      (fwrite(&imagf, sizeof(int32_T), 1, fp) == 0) ||
-      (fwrite(&name_len, sizeof(int32_T), 1, fp) == 0) ||
-      (fwrite(name, sizeof(char), name_len, fp) == 0)) {
-    return(1);
-  } else {
-    return(0);
-  }
-}                                      /* end rt_WriteMat4FileHeader */
-
 time_T rt_SimUpdateDiscreteEvents(
   int_T rtmNumSampTimes, void *rtmTimingData, int_T *rtmSampleHitPtr, int_T
   *rtmPerTaskSampleHits )
@@ -136,12 +108,12 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
 {
   /* local block i/o variables */
   real_T rtb_HILReadEncoderTimebase_o1;
-  real_T rtb_DeadZonex;
-  real_T rtb_Sum_k;
+  real_T rtb_HILReadEncoderTimebase_o2;
   real_T rtb_Backgain;
+  real_T rtb_Sum_k;
   real_T rtb_Frontgain;
   real_T rtb_Gain1_d;
-  real_T rtb_Gain1_b;
+  real_T rtb_Gain1_h;
   if (rtmIsMajorTimeStep(P2p2_M)) {
     /* set solver stop time */
     if (!(P2p2_M->Timing.clockTick0+1)) {
@@ -164,7 +136,7 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
   }
 
   if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* S-Function (hil_read_encoder_timebase_block): '<S9>/HIL Read Encoder Timebase' */
+    /* S-Function (hil_read_encoder_timebase_block): '<S8>/HIL Read Encoder Timebase' */
 
     /* S-Function Block: P2p2/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
     {
@@ -177,196 +149,107 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
         rtmSetErrorStatus(P2p2_M, _rt_error_message);
       } else {
         rtb_HILReadEncoderTimebase_o1 = P2p2_DW.HILReadEncoderTimebase_Buffer[0];
-        rtb_DeadZonex = P2p2_DW.HILReadEncoderTimebase_Buffer[1];
+        rtb_HILReadEncoderTimebase_o2 = P2p2_DW.HILReadEncoderTimebase_Buffer[1];
         rtb_Sum_k = P2p2_DW.HILReadEncoderTimebase_Buffer[2];
       }
     }
 
-    /* Gain: '<S9>/Pitch: Count to rad' */
-    P2p2_B.PitchCounttorad = P2p2_P.PitchCounttorad_Gain * rtb_DeadZonex;
+    /* Gain: '<S8>/Pitch: Count to rad' */
+    P2p2_B.PitchCounttorad = P2p2_P.PitchCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o2;
 
-    /* Gain: '<S16>/Gain' */
+    /* Gain: '<S15>/Gain' */
     P2p2_B.Gain = P2p2_P.Gain_Gain * P2p2_B.PitchCounttorad;
-
-    /* ToFile: '<Root>/To File' */
-    if (rtmIsMajorTimeStep(P2p2_M)) {
-      {
-        if (!(++P2p2_DW.ToFile_IWORK.Decimation % 1) &&
-            (P2p2_DW.ToFile_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P2p2_DW.ToFile_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P2p2_DW.ToFile_IWORK.Decimation = 0;
-            u[0] = P2p2_M->Timing.t[1];
-            u[1] = P2p2_B.Gain;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P2p2_M,
-                                "Error writing to MAT-file P2p2_pitch.mat");
-              return;
-            }
-
-            if (((++P2p2_DW.ToFile_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file P2p2_pitch.mat.\n");
-            }
-          }
-        }
-      }
-    }
-
-    /* Gain: '<S9>/Travel: Count to rad' */
-    P2p2_B.TravelCounttorad = P2p2_P.TravelCounttorad_Gain *
-      rtb_HILReadEncoderTimebase_o1;
-  }
-
-  /* Gain: '<S19>/Gain' incorporates:
-   *  TransferFcn: '<S9>/Travel: Transfer Fcn'
-   */
-  P2p2_B.Gain_d = (P2p2_P.TravelTransferFcn_C * P2p2_X.TravelTransferFcn_CSTATE
-                   + P2p2_P.TravelTransferFcn_D * P2p2_B.TravelCounttorad) *
-    P2p2_P.Gain_Gain_l;
-  if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* ToFile: '<Root>/To File2' */
-    if (rtmIsMajorTimeStep(P2p2_M)) {
-      {
-        if (!(++P2p2_DW.ToFile2_IWORK.Decimation % 1) &&
-            (P2p2_DW.ToFile2_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P2p2_DW.ToFile2_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P2p2_DW.ToFile2_IWORK.Decimation = 0;
-            u[0] = P2p2_M->Timing.t[1];
-            u[1] = P2p2_B.Gain_d;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P2p2_M,
-                                "Error writing to MAT-file P2p2_lambda_dot.mat");
-              return;
-            }
-
-            if (((++P2p2_DW.ToFile2_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file P2p2_lambda_dot.mat.\n");
-            }
-          }
-        }
-      }
-    }
-
-    /* RateTransition: '<S10>/Rate Transition: x' */
-    if (P2p2_M->Timing.RateInteraction.TID1_2) {
-      P2p2_B.RateTransitionx = P2p2_DW.RateTransitionx_Buffer0;
-    }
-
-    /* End of RateTransition: '<S10>/Rate Transition: x' */
-
-    /* DeadZone: '<S10>/Dead Zone: x' */
-    if (P2p2_B.RateTransitionx > P2p2_P.DeadZonex_End) {
-      rtb_DeadZonex = P2p2_B.RateTransitionx - P2p2_P.DeadZonex_End;
-    } else if (P2p2_B.RateTransitionx >= P2p2_P.DeadZonex_Start) {
-      rtb_DeadZonex = 0.0;
-    } else {
-      rtb_DeadZonex = P2p2_B.RateTransitionx - P2p2_P.DeadZonex_Start;
-    }
-
-    /* End of DeadZone: '<S10>/Dead Zone: x' */
-
-    /* Gain: '<S10>/Joystick_gain_x' incorporates:
-     *  Gain: '<S10>/Gain: x'
-     */
-    P2p2_B.Joystick_gain_x = P2p2_P.Gainx_Gain * rtb_DeadZonex *
-      P2p2_P.Joystick_gain_x;
-
-    /* ToFile: '<Root>/To File3' */
-    if (rtmIsMajorTimeStep(P2p2_M)) {
-      {
-        if (!(++P2p2_DW.ToFile3_IWORK.Decimation % 1) &&
-            (P2p2_DW.ToFile3_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P2p2_DW.ToFile3_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P2p2_DW.ToFile3_IWORK.Decimation = 0;
-            u[0] = P2p2_M->Timing.t[1];
-            u[1] = P2p2_B.Joystick_gain_x;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P2p2_M,
-                                "Error writing to MAT-file P2p2_lambda_dot_c_joystick.mat");
-              return;
-            }
-
-            if (((++P2p2_DW.ToFile3_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file P2p2_lambda_dot_c_joystick.mat.\n");
-            }
-          }
-        }
-      }
-    }
 
     /* Gain: '<S1>/Gain1' */
     P2p2_B.Gain1 = P2p2_P.Gain1_Gain * P2p2_B.Gain;
   }
 
-  /* Gain: '<S17>/Gain' incorporates:
-   *  TransferFcn: '<S9>/Pitch: Transfer Fcn'
+  /* Gain: '<S16>/Gain' incorporates:
+   *  TransferFcn: '<S8>/Pitch: Transfer Fcn'
    */
   P2p2_B.Gain_b = (P2p2_P.PitchTransferFcn_C * P2p2_X.PitchTransferFcn_CSTATE +
                    P2p2_P.PitchTransferFcn_D * P2p2_B.PitchCounttorad) *
     P2p2_P.Gain_Gain_a;
   if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* Gain: '<S9>/Elevation: Count to rad' */
+    /* Gain: '<S8>/Elevation: Count to rad' */
     P2p2_B.ElevationCounttorad = P2p2_P.ElevationCounttorad_Gain * rtb_Sum_k;
+  }
 
-    /* Sum: '<S9>/Sum' incorporates:
-     *  Constant: '<S9>/Elevation offset'
-     *  Gain: '<S14>/Gain'
+  /* Gain: '<S14>/Gain' incorporates:
+   *  TransferFcn: '<S8>/Elevation: Transfer Fcn'
+   */
+  P2p2_B.Gain_d = (P2p2_P.ElevationTransferFcn_C *
+                   P2p2_X.ElevationTransferFcn_CSTATE +
+                   P2p2_P.ElevationTransferFcn_D * P2p2_B.ElevationCounttorad) *
+    P2p2_P.Gain_Gain_n;
+
+  /* Gain: '<S3>/Gain1' */
+  rtb_Gain1_d = P2p2_P.Gain1_Gain_m * P2p2_B.Gain_d;
+  if (rtmIsMajorTimeStep(P2p2_M)) {
+    /* Gain: '<S8>/Travel: Count to rad' */
+    P2p2_B.TravelCounttorad = P2p2_P.TravelCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o1;
+  }
+
+  /* Gain: '<S18>/Gain' incorporates:
+   *  TransferFcn: '<S8>/Travel: Transfer Fcn'
+   */
+  P2p2_B.Gain_dc = (P2p2_P.TravelTransferFcn_C * P2p2_X.TravelTransferFcn_CSTATE
+                    + P2p2_P.TravelTransferFcn_D * P2p2_B.TravelCounttorad) *
+    P2p2_P.Gain_Gain_l;
+  if (rtmIsMajorTimeStep(P2p2_M)) {
+    /* Sum: '<S8>/Sum' incorporates:
+     *  Constant: '<S8>/Elevation offset'
+     *  Gain: '<S13>/Gain'
      */
     P2p2_B.Sum = P2p2_P.Gain_Gain_lv * P2p2_B.ElevationCounttorad +
       P2p2_P.elevation_offset;
 
-    /* Gain: '<S3>/Gain1' */
-    rtb_Gain1_d = P2p2_P.Gain1_Gain_e * P2p2_B.Sum;
+    /* Gain: '<S5>/Gain1' */
+    rtb_Gain1_h = P2p2_P.Gain1_Gain_e3 * P2p2_B.Sum;
+
+    /* RateTransition: '<S9>/Rate Transition: x' */
+    if (P2p2_M->Timing.RateInteraction.TID1_2) {
+      P2p2_B.RateTransitionx = P2p2_DW.RateTransitionx_Buffer0;
+    }
+
+    /* End of RateTransition: '<S9>/Rate Transition: x' */
+
+    /* DeadZone: '<S9>/Dead Zone: x' */
+    if (P2p2_B.RateTransitionx > P2p2_P.DeadZonex_End) {
+      rtb_Sum_k = P2p2_B.RateTransitionx - P2p2_P.DeadZonex_End;
+    } else if (P2p2_B.RateTransitionx >= P2p2_P.DeadZonex_Start) {
+      rtb_Sum_k = 0.0;
+    } else {
+      rtb_Sum_k = P2p2_B.RateTransitionx - P2p2_P.DeadZonex_Start;
+    }
+
+    /* End of DeadZone: '<S9>/Dead Zone: x' */
+
+    /* Gain: '<S9>/Joystick_gain_x' incorporates:
+     *  Gain: '<S9>/Gain: x'
+     */
+    P2p2_B.Joystick_gain_x = P2p2_P.Gainx_Gain * rtb_Sum_k *
+      P2p2_P.Joystick_gain_x;
   }
 
-  /* Gain: '<S15>/Gain' incorporates:
-   *  TransferFcn: '<S9>/Elevation: Transfer Fcn'
-   */
-  P2p2_B.Gain_dg = (P2p2_P.ElevationTransferFcn_C *
-                    P2p2_X.ElevationTransferFcn_CSTATE +
-                    P2p2_P.ElevationTransferFcn_D * P2p2_B.ElevationCounttorad) *
-    P2p2_P.Gain_Gain_n;
-
-  /* Gain: '<S5>/Gain1' */
-  rtb_Gain1_b = P2p2_P.Gain1_Gain_n * P2p2_B.Gain_dg;
-  if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* Sum: '<Root>/Sum' */
-    P2p2_B.Sum_o = 0.0 + P2p2_B.Joystick_gain_x;
-  }
-
-  /* Sum: '<S11>/Sum1' incorporates:
-   *  Gain: '<S11>/Kpd'
-   *  Gain: '<S11>/Kpp'
-   *  Gain: '<S12>/Klp'
+  /* Sum: '<S10>/Sum1' incorporates:
+   *  Gain: '<S10>/Kpd'
+   *  Gain: '<S10>/Kpp'
+   *  Gain: '<S11>/Klp'
    *  Gain: '<S2>/Gain1'
    *  Gain: '<S4>/Gain1'
-   *  Sum: '<S11>/Sum'
-   *  Sum: '<S12>/Sum1'
+   *  Sum: '<S10>/Sum'
+   *  Sum: '<S11>/Sum1'
    */
-  rtb_Frontgain = ((P2p2_B.Sum_o - P2p2_P.Gain1_Gain_ed * P2p2_B.Gain_d) *
-                   -P2p2_P.Klp - P2p2_B.Gain1) * P2p2_P.K_pp -
+  rtb_Frontgain = ((P2p2_B.Joystick_gain_x - P2p2_P.Gain1_Gain_e *
+                    P2p2_B.Gain_dc) * P2p2_P.Klp - P2p2_B.Gain1) * P2p2_P.K_pp -
     P2p2_P.Gain1_Gain_d * P2p2_B.Gain_b * P2p2_P.K_pd;
 
-  /* Integrator: '<S13>/Integrator'
+  /* Integrator: '<S12>/Integrator'
    *
-   * Regarding '<S13>/Integrator':
+   * Regarding '<S12>/Integrator':
    *  Limited Integrator
    */
   if (P2p2_X.Integrator_CSTATE >= P2p2_P.Integrator_UpperSat ) {
@@ -377,13 +260,13 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
 
   rtb_Backgain = P2p2_X.Integrator_CSTATE;
 
-  /* RateTransition: '<S10>/Rate Transition: y' */
+  /* RateTransition: '<S9>/Rate Transition: y' */
   if (rtmIsMajorTimeStep(P2p2_M)) {
     if (P2p2_M->Timing.RateInteraction.TID1_2) {
       P2p2_B.RateTransitiony = P2p2_DW.RateTransitiony_Buffer0;
     }
 
-    /* DeadZone: '<S10>/Dead Zone: y' */
+    /* DeadZone: '<S9>/Dead Zone: y' */
     if (P2p2_B.RateTransitiony > P2p2_P.DeadZoney_End) {
       rtb_Sum_k = P2p2_B.RateTransitiony - P2p2_P.DeadZoney_End;
     } else if (P2p2_B.RateTransitiony >= P2p2_P.DeadZoney_Start) {
@@ -392,47 +275,47 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
       rtb_Sum_k = P2p2_B.RateTransitiony - P2p2_P.DeadZoney_Start;
     }
 
-    /* End of DeadZone: '<S10>/Dead Zone: y' */
+    /* End of DeadZone: '<S9>/Dead Zone: y' */
 
-    /* Gain: '<S10>/Joystick_gain_y' incorporates:
-     *  Gain: '<S10>/Gain: y'
+    /* Gain: '<S9>/Joystick_gain_y' incorporates:
+     *  Gain: '<S9>/Gain: y'
      */
     P2p2_B.Joystick_gain_y = P2p2_P.Gainy_Gain * rtb_Sum_k *
       P2p2_P.Joystick_gain_y;
 
-    /* Sum: '<S8>/Sum' */
-    rtb_Sum_k = P2p2_B.Joystick_gain_y - rtb_Gain1_d;
+    /* Sum: '<S7>/Sum' */
+    rtb_Sum_k = P2p2_B.Joystick_gain_y - rtb_Gain1_h;
 
-    /* Gain: '<S13>/K_ep' */
+    /* Gain: '<S12>/K_ep' */
     P2p2_B.K_ep = P2p2_P.K_ep_Gain * rtb_Sum_k;
   }
 
-  /* End of RateTransition: '<S10>/Rate Transition: y' */
+  /* End of RateTransition: '<S9>/Rate Transition: y' */
 
-  /* Sum: '<S13>/Sum' incorporates:
-   *  Gain: '<S13>/K_ed'
+  /* Sum: '<S12>/Sum' incorporates:
+   *  Gain: '<S12>/K_ed'
    */
-  rtb_Backgain = (rtb_Backgain + P2p2_B.K_ep) - P2p2_P.K_ed_Gain * rtb_Gain1_b;
+  rtb_Backgain = (rtb_Backgain + P2p2_B.K_ep) - P2p2_P.K_ed_Gain * rtb_Gain1_d;
 
-  /* Sum: '<S7>/Add' */
+  /* Sum: '<S6>/Add' */
   rtb_Gain1_d = rtb_Frontgain + rtb_Backgain;
 
-  /* Gain: '<S7>/Back gain' incorporates:
-   *  Sum: '<S7>/Subtract'
+  /* Gain: '<S6>/Back gain' incorporates:
+   *  Sum: '<S6>/Subtract'
    */
   rtb_Backgain = (rtb_Backgain - rtb_Frontgain) * P2p2_P.Backgain_Gain;
   if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* Gain: '<S13>/K_ei' */
+    /* Gain: '<S12>/K_ei' */
     P2p2_B.K_ei = P2p2_P.K_ei_Gain * rtb_Sum_k;
 
-    /* Gain: '<S18>/Gain' */
+    /* Gain: '<S17>/Gain' */
     P2p2_B.Gain_p = P2p2_P.Gain_Gain_ar * P2p2_B.TravelCounttorad;
   }
 
-  /* Gain: '<S7>/Front gain' */
+  /* Gain: '<S6>/Front gain' */
   rtb_Gain1_d *= P2p2_P.Frontgain_Gain;
 
-  /* Saturate: '<S9>/Front motor: Saturation' */
+  /* Saturate: '<S8>/Front motor: Saturation' */
   if (rtb_Gain1_d > P2p2_P.FrontmotorSaturation_UpperSat) {
     P2p2_B.FrontmotorSaturation = P2p2_P.FrontmotorSaturation_UpperSat;
   } else if (rtb_Gain1_d < P2p2_P.FrontmotorSaturation_LowerSat) {
@@ -441,9 +324,9 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
     P2p2_B.FrontmotorSaturation = rtb_Gain1_d;
   }
 
-  /* End of Saturate: '<S9>/Front motor: Saturation' */
+  /* End of Saturate: '<S8>/Front motor: Saturation' */
 
-  /* Saturate: '<S9>/Back motor: Saturation' */
+  /* Saturate: '<S8>/Back motor: Saturation' */
   if (rtb_Backgain > P2p2_P.BackmotorSaturation_UpperSat) {
     P2p2_B.BackmotorSaturation = P2p2_P.BackmotorSaturation_UpperSat;
   } else if (rtb_Backgain < P2p2_P.BackmotorSaturation_LowerSat) {
@@ -452,9 +335,9 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
     P2p2_B.BackmotorSaturation = rtb_Backgain;
   }
 
-  /* End of Saturate: '<S9>/Back motor: Saturation' */
+  /* End of Saturate: '<S8>/Back motor: Saturation' */
   if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* S-Function (hil_write_analog_block): '<S9>/HIL Write Analog' */
+    /* S-Function (hil_write_analog_block): '<S8>/HIL Write Analog' */
 
     /* S-Function Block: P2p2/Heli 3D/HIL Write Analog (hil_write_analog_block) */
     {
@@ -467,45 +350,6 @@ void P2p2_output0(void)                /* Sample time: [0.0s, 0.0s] */
         msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
           (_rt_error_message));
         rtmSetErrorStatus(P2p2_M, _rt_error_message);
-      }
-    }
-  }
-
-  /* Step: '<Root>/Step' */
-  if (P2p2_M->Timing.t[0] < P2p2_P.Step_Time) {
-    P2p2_B.Step = P2p2_P.Step_Y0;
-  } else {
-    P2p2_B.Step = P2p2_P.Step_YFinal;
-  }
-
-  /* End of Step: '<Root>/Step' */
-  if (rtmIsMajorTimeStep(P2p2_M)) {
-    /* ToFile: '<Root>/To File1' */
-    if (rtmIsMajorTimeStep(P2p2_M)) {
-      {
-        if (!(++P2p2_DW.ToFile1_IWORK.Decimation % 1) &&
-            (P2p2_DW.ToFile1_IWORK.Count*2)+1 < 100000000 ) {
-          FILE *fp = (FILE *) P2p2_DW.ToFile1_PWORK.FilePtr;
-          if (fp != (NULL)) {
-            real_T u[2];
-            P2p2_DW.ToFile1_IWORK.Decimation = 0;
-            u[0] = P2p2_M->Timing.t[1];
-            u[1] = P2p2_B.Step;
-            if (fwrite(u, sizeof(real_T), 2, fp) != 2) {
-              rtmSetErrorStatus(P2p2_M,
-                                "Error writing to MAT-file P2p2_lambda_dot_c.mat");
-              return;
-            }
-
-            if (((++P2p2_DW.ToFile1_IWORK.Count)*2)+1 >= 100000000) {
-              (void)fprintf(stdout,
-                            "*** The ToFile block will stop logging data before\n"
-                            "    the simulation has ended, because it has reached\n"
-                            "    the maximum number of elements (100000000)\n"
-                            "    allowed in MAT-file P2p2_lambda_dot_c.mat.\n");
-            }
-          }
-        }
       }
     }
   }
@@ -556,25 +400,25 @@ void P2p2_derivatives(void)
   XDot_P2p2_T *_rtXdot;
   _rtXdot = ((XDot_P2p2_T *) P2p2_M->ModelData.derivs);
 
-  /* Derivatives for TransferFcn: '<S9>/Travel: Transfer Fcn' */
-  _rtXdot->TravelTransferFcn_CSTATE = 0.0;
-  _rtXdot->TravelTransferFcn_CSTATE += P2p2_P.TravelTransferFcn_A *
-    P2p2_X.TravelTransferFcn_CSTATE;
-  _rtXdot->TravelTransferFcn_CSTATE += P2p2_B.TravelCounttorad;
-
-  /* Derivatives for TransferFcn: '<S9>/Pitch: Transfer Fcn' */
+  /* Derivatives for TransferFcn: '<S8>/Pitch: Transfer Fcn' */
   _rtXdot->PitchTransferFcn_CSTATE = 0.0;
   _rtXdot->PitchTransferFcn_CSTATE += P2p2_P.PitchTransferFcn_A *
     P2p2_X.PitchTransferFcn_CSTATE;
   _rtXdot->PitchTransferFcn_CSTATE += P2p2_B.PitchCounttorad;
 
-  /* Derivatives for TransferFcn: '<S9>/Elevation: Transfer Fcn' */
+  /* Derivatives for TransferFcn: '<S8>/Elevation: Transfer Fcn' */
   _rtXdot->ElevationTransferFcn_CSTATE = 0.0;
   _rtXdot->ElevationTransferFcn_CSTATE += P2p2_P.ElevationTransferFcn_A *
     P2p2_X.ElevationTransferFcn_CSTATE;
   _rtXdot->ElevationTransferFcn_CSTATE += P2p2_B.ElevationCounttorad;
 
-  /* Derivatives for Integrator: '<S13>/Integrator' */
+  /* Derivatives for TransferFcn: '<S8>/Travel: Transfer Fcn' */
+  _rtXdot->TravelTransferFcn_CSTATE = 0.0;
+  _rtXdot->TravelTransferFcn_CSTATE += P2p2_P.TravelTransferFcn_A *
+    P2p2_X.TravelTransferFcn_CSTATE;
+  _rtXdot->TravelTransferFcn_CSTATE += P2p2_B.TravelCounttorad;
+
+  /* Derivatives for Integrator: '<S12>/Integrator' */
   {
     boolean_T lsat;
     boolean_T usat;
@@ -595,7 +439,7 @@ void P2p2_derivatives(void)
 /* Model output function for TID2 */
 void P2p2_output2(void)                /* Sample time: [0.01s, 0.0s] */
 {
-  /* S-Function (game_controller_block): '<S10>/Game Controller' */
+  /* S-Function (game_controller_block): '<S9>/Game Controller' */
 
   /* S-Function Block: P2p2/Joystick/Game Controller (game_controller_block) */
   {
@@ -619,10 +463,10 @@ void P2p2_output2(void)                /* Sample time: [0.01s, 0.0s] */
 /* Model update function for TID2 */
 void P2p2_update2(void)                /* Sample time: [0.01s, 0.0s] */
 {
-  /* Update for RateTransition: '<S10>/Rate Transition: x' */
+  /* Update for RateTransition: '<S9>/Rate Transition: x' */
   P2p2_DW.RateTransitionx_Buffer0 = P2p2_B.GameController_o4;
 
-  /* Update for RateTransition: '<S10>/Rate Transition: y' */
+  /* Update for RateTransition: '<S9>/Rate Transition: y' */
   P2p2_DW.RateTransitiony_Buffer0 = P2p2_B.GameController_o5;
 
   /* Update absolute time */
@@ -1029,7 +873,7 @@ void P2p2_initialize(void)
     }
   }
 
-  /* Start for S-Function (hil_read_encoder_timebase_block): '<S9>/HIL Read Encoder Timebase' */
+  /* Start for S-Function (hil_read_encoder_timebase_block): '<S8>/HIL Read Encoder Timebase' */
 
   /* S-Function Block: P2p2/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
   {
@@ -1045,74 +889,13 @@ void P2p2_initialize(void)
     }
   }
 
-  /* Start for ToFile: '<Root>/To File' */
-  {
-    char fileName[509] = "P2p2_pitch.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P2p2_M, "Error creating .mat file P2p2_pitch.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P2p2_M,
-                        "Error writing mat file header to file P2p2_pitch.mat");
-      return;
-    }
-
-    P2p2_DW.ToFile_IWORK.Count = 0;
-    P2p2_DW.ToFile_IWORK.Decimation = -1;
-    P2p2_DW.ToFile_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<Root>/To File2' */
-  {
-    char fileName[509] = "P2p2_lambda_dot.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P2p2_M, "Error creating .mat file P2p2_lambda_dot.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P2p2_M,
-                        "Error writing mat file header to file P2p2_lambda_dot.mat");
-      return;
-    }
-
-    P2p2_DW.ToFile2_IWORK.Count = 0;
-    P2p2_DW.ToFile2_IWORK.Decimation = -1;
-    P2p2_DW.ToFile2_PWORK.FilePtr = fp;
-  }
-
-  /* Start for RateTransition: '<S10>/Rate Transition: x' */
+  /* Start for RateTransition: '<S9>/Rate Transition: x' */
   P2p2_B.RateTransitionx = P2p2_P.RateTransitionx_X0;
 
-  /* Start for ToFile: '<Root>/To File3' */
-  {
-    char fileName[509] = "P2p2_lambda_dot_c_joystick.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P2p2_M,
-                        "Error creating .mat file P2p2_lambda_dot_c_joystick.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P2p2_M,
-                        "Error writing mat file header to file P2p2_lambda_dot_c_joystick.mat");
-      return;
-    }
-
-    P2p2_DW.ToFile3_IWORK.Count = 0;
-    P2p2_DW.ToFile3_IWORK.Decimation = -1;
-    P2p2_DW.ToFile3_PWORK.FilePtr = fp;
-  }
-
-  /* Start for RateTransition: '<S10>/Rate Transition: y' */
+  /* Start for RateTransition: '<S9>/Rate Transition: y' */
   P2p2_B.RateTransitiony = P2p2_P.RateTransitiony_X0;
 
-  /* Start for S-Function (game_controller_block): '<S10>/Game Controller' */
+  /* Start for S-Function (game_controller_block): '<S9>/Game Controller' */
 
   /* S-Function Block: P2p2/Joystick/Game Controller (game_controller_block) */
   {
@@ -1141,42 +924,22 @@ void P2p2_initialize(void)
     }
   }
 
-  /* Start for ToFile: '<Root>/To File1' */
-  {
-    char fileName[509] = "P2p2_lambda_dot_c.mat";
-    FILE *fp = (NULL);
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(P2p2_M, "Error creating .mat file P2p2_lambda_dot_c.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(P2p2_M,
-                        "Error writing mat file header to file P2p2_lambda_dot_c.mat");
-      return;
-    }
-
-    P2p2_DW.ToFile1_IWORK.Count = 0;
-    P2p2_DW.ToFile1_IWORK.Decimation = -1;
-    P2p2_DW.ToFile1_PWORK.FilePtr = fp;
-  }
-
-  /* InitializeConditions for TransferFcn: '<S9>/Travel: Transfer Fcn' */
-  P2p2_X.TravelTransferFcn_CSTATE = 0.0;
-
-  /* InitializeConditions for RateTransition: '<S10>/Rate Transition: x' */
-  P2p2_DW.RateTransitionx_Buffer0 = P2p2_P.RateTransitionx_X0;
-
-  /* InitializeConditions for TransferFcn: '<S9>/Pitch: Transfer Fcn' */
+  /* InitializeConditions for TransferFcn: '<S8>/Pitch: Transfer Fcn' */
   P2p2_X.PitchTransferFcn_CSTATE = 0.0;
 
-  /* InitializeConditions for TransferFcn: '<S9>/Elevation: Transfer Fcn' */
+  /* InitializeConditions for TransferFcn: '<S8>/Elevation: Transfer Fcn' */
   P2p2_X.ElevationTransferFcn_CSTATE = 0.0;
 
-  /* InitializeConditions for Integrator: '<S13>/Integrator' */
+  /* InitializeConditions for TransferFcn: '<S8>/Travel: Transfer Fcn' */
+  P2p2_X.TravelTransferFcn_CSTATE = 0.0;
+
+  /* InitializeConditions for RateTransition: '<S9>/Rate Transition: x' */
+  P2p2_DW.RateTransitionx_Buffer0 = P2p2_P.RateTransitionx_X0;
+
+  /* InitializeConditions for Integrator: '<S12>/Integrator' */
   P2p2_X.Integrator_CSTATE = P2p2_P.Integrator_IC;
 
-  /* InitializeConditions for RateTransition: '<S10>/Rate Transition: y' */
+  /* InitializeConditions for RateTransition: '<S9>/Rate Transition: y' */
   P2p2_DW.RateTransitiony_Buffer0 = P2p2_P.RateTransitiony_X0;
 }
 
@@ -1274,133 +1037,13 @@ void P2p2_terminate(void)
     P2p2_DW.HILInitialize_Card = NULL;
   }
 
-  /* Terminate for ToFile: '<Root>/To File' */
-  {
-    FILE *fp = (FILE *) P2p2_DW.ToFile_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "P2p2_pitch.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_pitch.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P2p2_M, "Error reopening MAT-file P2p2_pitch.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P2p2_DW.ToFile_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error writing header for ans to MAT-file P2p2_pitch.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_pitch.mat");
-        return;
-      }
-
-      P2p2_DW.ToFile_PWORK.FilePtr = (NULL);
-    }
-  }
-
-  /* Terminate for ToFile: '<Root>/To File2' */
-  {
-    FILE *fp = (FILE *) P2p2_DW.ToFile2_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "P2p2_lambda_dot.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_lambda_dot.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P2p2_M, "Error reopening MAT-file P2p2_lambda_dot.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P2p2_DW.ToFile2_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error writing header for ans to MAT-file P2p2_lambda_dot.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_lambda_dot.mat");
-        return;
-      }
-
-      P2p2_DW.ToFile2_PWORK.FilePtr = (NULL);
-    }
-  }
-
-  /* Terminate for ToFile: '<Root>/To File3' */
-  {
-    FILE *fp = (FILE *) P2p2_DW.ToFile3_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "P2p2_lambda_dot_c_joystick.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error closing MAT-file P2p2_lambda_dot_c_joystick.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error reopening MAT-file P2p2_lambda_dot_c_joystick.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P2p2_DW.ToFile3_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error writing header for ans to MAT-file P2p2_lambda_dot_c_joystick.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error closing MAT-file P2p2_lambda_dot_c_joystick.mat");
-        return;
-      }
-
-      P2p2_DW.ToFile3_PWORK.FilePtr = (NULL);
-    }
-  }
-
-  /* Terminate for S-Function (game_controller_block): '<S10>/Game Controller' */
+  /* Terminate for S-Function (game_controller_block): '<S9>/Game Controller' */
 
   /* S-Function Block: P2p2/Joystick/Game Controller (game_controller_block) */
   {
     if (P2p2_P.GameController_Enabled) {
       game_controller_close(P2p2_DW.GameController_Controller);
       P2p2_DW.GameController_Controller = NULL;
-    }
-  }
-
-  /* Terminate for ToFile: '<Root>/To File1' */
-  {
-    FILE *fp = (FILE *) P2p2_DW.ToFile1_PWORK.FilePtr;
-    if (fp != (NULL)) {
-      char fileName[509] = "P2p2_lambda_dot_c.mat";
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_lambda_dot_c.mat");
-        return;
-      }
-
-      if ((fp = fopen(fileName, "r+b")) == (NULL)) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error reopening MAT-file P2p2_lambda_dot_c.mat");
-        return;
-      }
-
-      if (rt_WriteMat4FileHeader(fp, 2, P2p2_DW.ToFile1_IWORK.Count, "ans")) {
-        rtmSetErrorStatus(P2p2_M,
-                          "Error writing header for ans to MAT-file P2p2_lambda_dot_c.mat");
-      }
-
-      if (fclose(fp) == EOF) {
-        rtmSetErrorStatus(P2p2_M, "Error closing MAT-file P2p2_lambda_dot_c.mat");
-        return;
-      }
-
-      P2p2_DW.ToFile1_PWORK.FilePtr = (NULL);
     }
   }
 }
@@ -1540,10 +1183,10 @@ RT_MODEL_P2p2_T *P2p2(void)
   P2p2_M->Timing.stepSize2 = 0.01;
 
   /* External mode info */
-  P2p2_M->Sizes.checksums[0] = (4094421977U);
-  P2p2_M->Sizes.checksums[1] = (3738269576U);
-  P2p2_M->Sizes.checksums[2] = (1829350794U);
-  P2p2_M->Sizes.checksums[3] = (2075762084U);
+  P2p2_M->Sizes.checksums[0] = (3849907325U);
+  P2p2_M->Sizes.checksums[1] = (357152023U);
+  P2p2_M->Sizes.checksums[2] = (1368414447U);
+  P2p2_M->Sizes.checksums[3] = (569754086U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -1569,16 +1212,15 @@ RT_MODEL_P2p2_T *P2p2(void)
   {
     P2p2_B.PitchCounttorad = 0.0;
     P2p2_B.Gain = 0.0;
-    P2p2_B.TravelCounttorad = 0.0;
-    P2p2_B.Gain_d = 0.0;
-    P2p2_B.RateTransitionx = 0.0;
-    P2p2_B.Joystick_gain_x = 0.0;
     P2p2_B.Gain1 = 0.0;
     P2p2_B.Gain_b = 0.0;
     P2p2_B.ElevationCounttorad = 0.0;
+    P2p2_B.Gain_d = 0.0;
+    P2p2_B.TravelCounttorad = 0.0;
+    P2p2_B.Gain_dc = 0.0;
     P2p2_B.Sum = 0.0;
-    P2p2_B.Gain_dg = 0.0;
-    P2p2_B.Sum_o = 0.0;
+    P2p2_B.RateTransitionx = 0.0;
+    P2p2_B.Joystick_gain_x = 0.0;
     P2p2_B.RateTransitiony = 0.0;
     P2p2_B.Joystick_gain_y = 0.0;
     P2p2_B.K_ep = 0.0;
@@ -1588,7 +1230,6 @@ RT_MODEL_P2p2_T *P2p2(void)
     P2p2_B.BackmotorSaturation = 0.0;
     P2p2_B.GameController_o4 = 0.0;
     P2p2_B.GameController_o5 = 0.0;
-    P2p2_B.Step = 0.0;
   }
 
   /* parameters */
@@ -1691,9 +1332,9 @@ RT_MODEL_P2p2_T *P2p2(void)
   P2p2_M->Sizes.numU = (0);            /* Number of model inputs */
   P2p2_M->Sizes.sysDirFeedThru = (0);  /* The model is not direct feedthrough */
   P2p2_M->Sizes.numSampTimes = (3);    /* Number of sample times */
-  P2p2_M->Sizes.numBlocks = (63);      /* Number of blocks */
-  P2p2_M->Sizes.numBlockIO = (22);     /* Number of block outputs */
-  P2p2_M->Sizes.numBlockPrms = (159);  /* Sum of parameter "widths" */
+  P2p2_M->Sizes.numBlocks = (57);      /* Number of blocks */
+  P2p2_M->Sizes.numBlockIO = (20);     /* Number of block outputs */
+  P2p2_M->Sizes.numBlockPrms = (156);  /* Sum of parameter "widths" */
   return P2p2_M;
 }
 

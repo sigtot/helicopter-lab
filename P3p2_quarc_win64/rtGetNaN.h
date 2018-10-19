@@ -3,9 +3,9 @@
  *
  * Code generation for model "P3p2".
  *
- * Model version              : 1.70
+ * Model version              : 1.77
  * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Mon Oct 15 00:05:32 2018
+ * C source code generated on : Sat Oct 20 01:04:02 2018
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
